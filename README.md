@@ -1,25 +1,36 @@
 VZ Address Fieldtype for Craft
-==========================
+==============================
 
-A VZ Address field displays a textbox where the user can enter a URL. It will ping the URL they entered and display an error message if it doesn't find a valid webpage there. It also prompts the user to update URLs that are redirected to a different location.
+A simple address field for Craft.
 
-![Screenshot of VZ Address for Craft](../gh-pages/screenshot.png?raw=true)
-
-Please note that VZ URL will not prevent the user from saving their weblog entry if if cannot validate the URL - it just warns them. This is intentional, perhaps they are linking to a page they have not yet created, or the site they are linking to is currently down but they know the URL is correct.
 
 Template Variables
 ------------------
 
 ### Simple output
 
-Just output the URL that was entered.
+Just output the address, on a single line.
 
-    <a href="{{ entry.fieldName }}">Link</a>
+    {{ entry.fieldName }} or {{ entry.fieldName.inline }}
+
+### Plain HTML ouput
+
+Standard address format, with `<br>` tags at the end of each line.
+
+    {{ entry.fieldName.plainHtml }}
+
+### Plain text ouput
+
+Standard address format, with line-breaks at the end of each line.
+
+    {{ entry.fieldName.plainText }}
+
 
 Installation
 ------------
 
-Download and unzip the extension. Upload the `vzaddress` folder to your `/craft/plugins/` folder. Go to Settings -> Plugins in the Craft control panel and enable the VZ Address plugin. That's it!
+Download and unzip the extension. Upload the `vzaddress` folder to your `/craft/plugins/` folder. Go to Settings -> Plugins in the Craft control panel and enable the VZ Address plugin. You can now create new Address fields.
+
 
 Support
 -------
@@ -28,3 +39,4 @@ Please post all bugs or feature requests in [GitHub Issues](https://github.com/e
 
 Roadmap
 -------
+
