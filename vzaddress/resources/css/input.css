@@ -1,0 +1,64 @@
+/*
+ *  Styles for VZ Address fieldtype
+ *  by Eli Van Zoeren - http://elivz.com
+ */
+
+.vzaddress-field {
+    position: relative;
+    padding-bottom: 1.5em;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.vzaddress-field label {
+    position: absolute;
+    bottom: 3px;
+    padding-left: 1px;
+    font-size: 11px;
+    color: #8f98a3;
+}
+
+.vzaddress-country .select {
+    display: block;
+}
+
+.narrow .vzaddress-region {
+    float: left;
+    width: 50%;
+    padding-right: 0.75em;
+}
+.narrow .vzaddress-postalCode {
+    float: right;
+    width: 50%;
+    padding-left: 0.75em;
+}
+
+.vzaddress-country {
+    clear: both;
+}
+
+.wide .vzaddress-street,
+.wide .vzaddress-city {
+    float: left;
+    width: 50%;
+    padding-right: 0.75em;
+}
+.wide .vzaddress-street2 {
+    float: right;
+    width: 50%;
+    padding-left: 0.75em;
+}
+.wide .vzaddress-region,
+.wide .vzaddress-postalCode {
+    float: left;
+    width: 25%;
+    padding-left: 0.75em;
+}
+.wide .vzaddress-region {
+    padding-right: 0.75em;
+}
+.wide .vzaddress-country {
+    width: 50%;
+    padding-right: 0.75em;
+}
