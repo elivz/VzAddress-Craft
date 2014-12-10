@@ -16,11 +16,21 @@ class VzAddress_AddressModel extends BaseModel
         );
     }
 
+    public function __toString()
+    {
+        return $this->inline();
+    }
+
+    public function toArray()
+    {
+        $address = array_filter($this->attributes);
+        $address['country'] = $this->countryName;
+        return $address;
+    }
+
     public function inline()
     {
-        $values = array_filter($this->attributes);
-        $values['country'] = $this->countryName;
-        return implode(', ', $values);
+        return implode(', ', $this->toArray());
     }
 
     public function plainText()
@@ -40,9 +50,32 @@ class VzAddress_AddressModel extends BaseModel
         return str_replace("\n", '<br>', $this->plainText());
     }
 
-    public function __toString()
+    public function mapUrl($params=array())
     {
-        return $this->inline();
+        $source = isset($params['source']) ? strtolower($params['source']) : 'google';
+        unset($params['source']);
+        $params = count($params) ? '&' . http_build_query($params) : '';
+
+        // Create the url-encoded address
+        $query = urlencode(implode(', ', $this->toArray()));
+
+        switch ($source)
+        {
+            case 'yahoo':
+                $output = "http://maps.yahoo.com/#q={$query}{$params}";
+                break;
+            case 'bing':
+                $output = "http://www.bing.com/maps/?v=2&where1={$query}{$params}";
+                break;
+            case 'mapquest':
+                $output = "http://mapq.st/map?q={$query}{$params}";
+                break;
+            case 'google': default:
+                $output = "http://maps.google.com/maps?q={$query}{$params}";
+                break;
+        }
+
+        return $output;
     }
 
     /**

@@ -7,7 +7,7 @@ A simple address field for Craft.
 Template Variables
 ------------------
 
-### Simple output
+### Single-line output
 
 Just output the address, on a single line.
 
@@ -24,6 +24,17 @@ Standard address format, with `<br>` tags at the end of each line.
 Standard address format, with line-breaks at the end of each line.
 
     {{ entry.fieldName.plainText }}
+
+### Address components
+
+    {{ entry.fieldName.name }}
+    {{ entry.fieldName.street }}
+    {{ entry.fieldName.street2 }}
+    {{ entry.fieldName.city }}
+    {{ entry.fieldName.region }}
+    {{ entry.fieldName.postalCode }}
+    {{ entry.fieldName.country }} // Abbreviation, e.g. "US"
+    {{ entry.fieldName.countryName }} // Full name, e.g. "United States"
 
 
 Installation
