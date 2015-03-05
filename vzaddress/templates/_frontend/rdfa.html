@@ -1,0 +1,15 @@
+{% if address.name %}
+    <div vocab="http://schema.org/" typeof="Organization">
+        <div property="fn">{{ address.name }}</div>
+{% endif %}
+    <div {% if address.name %}property="address"{% else %}vocab="http://schema.org/"{% endif %} typeof="PostalAddress">
+        {% if address.street %}<div property="streetAddress">{{ address.street }}</div>{% endif %}
+        {% if address.street2 %}<div property="extendedAddress">{{ address.street2 }}</div>{% endif %}
+        <div>
+            {% if address.city %}<span property="locality">{{ address.city }}</span>, {% endif %}
+            {% if address.region %}<span property="addressRegion">{{ address.region }}</span>{% endif %}
+            {% if address.postalCode %}<span property="postalCode">{{ address.postalCode }}</span>{% endif %}
+        </div>
+        {% if address.countryName %}<div property="addressCountry">{{ address.countryName }}</div>{% endif %}
+    </div>
+{% if address.name %}</div>{% endif %}

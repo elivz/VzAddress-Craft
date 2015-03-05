@@ -16,9 +16,14 @@ class VzAddress_AddressModel extends BaseModel
         );
     }
 
+    protected function setTemplatePath()
+    {
+        craft()->path->setTemplatesPath(craft()->path->getPluginsPath() . 'vzaddress/templates/_frontend/');
+    }
+
     public function __toString()
     {
-        return $this->inline();
+        return $this->text(true);
     }
 
     public function toArray()
@@ -28,26 +33,36 @@ class VzAddress_AddressModel extends BaseModel
         return $address;
     }
 
-    public function inline()
+    public function text($formatted=false)
     {
-        return implode(', ', $this->toArray());
+        if ($formatted)
+        {
+            $this->setTemplatePath();
+            return craft()->templates->render('text', array(
+                'address' => $this
+            ));
+        }
+        else
+        {
+            return implode(', ', $this->toArray());
+        }
     }
 
-    public function plainText()
+    public function html($format="plain")
     {
-        $lines = array();
-        if ($this->name) $lines[] = $this->name;
-        if ($this->street) $lines[] = $this->street;
-        if ($this->street2) $lines[] = $this->street2;
-        $lines[] = ($this->city ? $this->city.', ' : '') . ($this->region ? $this->region.', ' : '') . ($this->postalCode ? $this->postalCode : '');
-        if ($this->country) $lines[] = $this->countryName;
+        $this->setTemplatePath();
 
-        return implode("\n", $lines);
-    }
+        if (in_array($format, array('schema', 'microformat', 'rdfa')))
+        {
+            $output = craft()->templates->render($format, array(
+                'address' => $this
+            ));
+        }
+        else
+        {
+            $output = str_replace("\n", '<br>', $this->text(true));
+        }
 
-    public function plainHtml()
-    {
-        $output = str_replace("\n", '<br>', $this->plainText());
         return TemplateHelper::getRaw($output);
     }
 

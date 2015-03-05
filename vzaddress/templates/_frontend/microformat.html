@@ -1,0 +1,15 @@
+{% if address.name %}
+    <div class="vcard">
+        <div class="fn">{{ address.name }}</div>
+{% endif %}
+    <div class="adr">
+        {% if address.street %}<div class="street-address">{{ address.street }}</div>{% endif %}
+        {% if address.street2 %}<div class="extended-address">{{ address.street2 }}</div>{% endif %}
+        <div>
+            {% if address.city %}<span itemprop="locality">{{ address.city }}</span>, {% endif %}
+            {% if address.region %}<span itemprop="region">{{ address.region }}</span>{% endif %}
+            {% if address.postalCode %}<span itemprop="postal-code">{{ address.postalCode }}</span>{% endif %}
+        </div>
+        {% if address.countryName %}<div itemprop="country-name">{{ address.countryName }}</div>{% endif %}
+    </div>
+{% if address.name %}</div>{% endif %}

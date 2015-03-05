@@ -11,19 +11,27 @@ Template Variables
 
 Just output the address, on a single line.
 
-    {{ entry.fieldName }} or {{ entry.fieldName.inline }}
-
-### Plain HTML ouput
-
-Standard address format, with `<br>` tags at the end of each line.
-
-    {{ entry.fieldName.plainHtml }}
+    {{ entry.fieldName.text }}
 
 ### Plain text ouput
 
 Standard address format, with line-breaks at the end of each line.
 
-    {{ entry.fieldName.plainText }}
+    {{ entry.fieldName.text(true) }}
+
+Or simply:
+
+    {{ entry.fieldName }}
+
+### HTML ouput
+
+Standard address format, with `<br>` tags at the end of each line.
+
+    {{ entry.fieldName.html }}
+
+You can also output the html in one of three structured data formats: Schema.org, Microformats, and RDFa. To do that, just add your preferred format as a parameter to the `html` tag.
+
+    {{ entry.fieldName.html('schema') }}
 
 ### Address components
 
