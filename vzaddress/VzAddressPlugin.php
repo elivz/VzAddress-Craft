@@ -6,23 +6,37 @@ namespace Craft;
  */
 class VzAddressPlugin extends BasePlugin
 {
-    function getName()
+    public function getName()
     {
         return 'VZ Address';
     }
 
-    function getVersion()
+    public function getVersion()
     {
-        return '1.0.1';
+        return '1.1.0';
     }
 
-    function getDeveloper()
+    public function getDeveloper()
     {
         return 'Eli Van Zoeren';
     }
 
-    function getDeveloperUrl()
+    public function getDeveloperUrl()
     {
         return 'http://elivz.com';
+    }
+
+    protected function defineSettings()
+    {
+        return array(
+            'googleApiKey' => AttributeType::String,
+        );
+    }
+
+    public function getSettingsHtml()
+    {
+        return craft()->templates->render('vzaddress/settings', array(
+            'settings' => $this->getSettings()
+        ));
     }
 }

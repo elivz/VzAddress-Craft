@@ -1,6 +1,6 @@
 {% import "_includes/forms" as forms %}
 
-<div id="{{ id }}" class="vzaddress-wrapper">
+<div id="{{ id }}" class="vzaddress-wrapper {% if settings.showMap %}has-map{% endif %}">
     <div class="vzaddress-fields">
         {% if settings.showName %}
             <div class="vzaddress-field vzaddress-name">
@@ -13,6 +13,7 @@
                 }) }}
             </div>
         {% endif %}
+
         <div class="vzaddress-field vzaddress-street">
             <label for="{{ id~'-street' }}">{{ 'Street Address'|t }}</label>
             {{ forms.text({
@@ -22,6 +23,7 @@
                 placeholder: 'Street Address'|t
             }) }}
         </div>
+
         <div class="vzaddress-field vzaddress-street2">
             <label for="{{ id~'-street2' }}">{{ 'Street Address 2'|t }}</label>
             {{ forms.text({
@@ -31,6 +33,7 @@
                 placeholder: 'Street Address 2'|t
             }) }}
         </div>
+
         <div class="vzaddress-field vzaddress-city">
             <label for="{{ id~'-city' }}">{{ 'City'|t }}</label>
             {{ forms.text({
@@ -40,6 +43,7 @@
                 placeholder: 'City'|t
             }) }}
         </div>
+
         <div class="vzaddress-field vzaddress-region">
             <label for="{{ id~'-region' }}">{{ 'State/Province'|t }}</label>
             {{ forms.text({
@@ -49,6 +53,7 @@
                 placeholder: 'State/Province'|t
             }) }}
         </div>
+
         <div class="vzaddress-field vzaddress-postalCode">
             <label for="{{ id~'-postalCode' }}">{{ 'Postal Code'|t }}</label>
             {{ forms.text({
@@ -58,6 +63,7 @@
                 placeholder: 'Postal Code'|t
             }) }}
         </div>
+
         <div class="vzaddress-field vzaddress-country">
             <label for="{{ id~'-country' }}">{{ 'Country'|t }}</label>
             {{ forms.select({
@@ -67,7 +73,21 @@
                 options: countries
             }) }}
         </div>
+
+        {{ forms.hidden({
+            id: id~'-latitude',
+            name: name~'[latitude]',
+            value: values.latitude
+        }) }}
+
+        {{ forms.hidden({
+            id: id~'-longitude',
+            name: name~'[longitude]',
+            value: values.longitude
+        }) }}
     </div>
-    <div class="vzaddress-map">
-    </div>
+
+    {% if settings.showMap %}
+        <div class="vzaddress-map"></div>
+    {% endif %}
 </div>

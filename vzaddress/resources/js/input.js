@@ -86,9 +86,9 @@
 
     Plugin.prototype = {
 
-        wideMode: false,
+        showMap: false,
         $field: false,
-
+        fieldId: false,
         map: false,
         marker: false,
         latLng: false,
@@ -96,14 +96,12 @@
         init: function() {
             var vzAddress = this;
             vzAddress.$field = $(this.element);
+            vzAddress.fieldId = this.element.id;
+            vzAddress.showMap = vzAddress.$field.hasClass('has-map');
 
             $(window).on('resize', function() {
-                wideMode = vzAddress.$field.width() > 450;
-                if (wideMode !== vzAddress.wideMode) {
-                    vzAddress.wideMode = wideMode;
-                    vzAddress.$field.toggleClass('wide', vzAddress.wideMode);
-                    vzAddress.$field.toggleClass('narrow', !vzAddress.wideMode);
-                }
+                showMap = vzAddress.showMap && vzAddress.$field.width() > 450;
+                vzAddress.$field.toggleClass('has-map', showMap);
             });
 
             vzAddress.initMap();
@@ -112,18 +110,30 @@
         },
 
         initMap: function() {
-            this.map = new google.maps.Map(this.$field.find('.vzaddress-map').get(0), this.options.mapOptions);
-            this.geocoder = new google.maps.Geocoder();
-            this.geocode();
+            var vzAddress = this;
+
+            if (vzAddress.showMap) {
+                vzAddress.map = new google.maps.Map(vzAddress.$field.find('.vzaddress-map').get(0), vzAddress.options.mapOptions);
+            }
+
+            vzAddress.geocoder = new google.maps.Geocoder();
+            vzAddress.geocode();
+        },
+
+        getAddress: function() {
+            var vzAddress = this;
+
+            return vzAddress.$field.find('input[type="text"], select').map(function() {
+                return $(this).val() || null;
+            }).get().join(', ');
         },
 
         geocode: function() {
-            if (!this.map) return;
-
             var vzAddress = this;
-            var address = vzAddress.$field.find('input, select').map(function() {
-                return $(this).val();
-            }).get().join(' ');
+
+            if (!vzAddress.geocoder) return;
+
+            var address = vzAddress.getAddress();
 
             // Clear existing marker
             if (vzAddress.marker) {
@@ -134,16 +144,49 @@
                 { 'address': address },
                 function(results, status) {
                     if (status == google.maps.GeocoderStatus.OK) {
-                        vzAddress.latLng = results[0].geometry.location;
-                        vzAddress.map.fitBounds(results[0].geometry.viewport);
-                        vzAddress.marker = new google.maps.Marker({
-                            position: vzAddress.latLng,
-                            map: vzAddress.map
-                        });
+                        if (results.length === 1) {
+                            var location = results[0];
+
+                            if (vzAddress.showMap) {
+                                vzAddress.map.fitBounds(location.geometry.viewport);
+                                vzAddress.marker = new google.maps.Marker({
+                                    position: location.geometry.location,
+                                    map: vzAddress.map
+                                });
+                            }
+
+                            // Interpolate missing data
+                            var componentMapping = {
+                                'locality': 'city',
+                                'administrative_area_level_1': 'region',
+                                'postal_code': 'postalCode'
+                            };
+                            $.each(location.address_components, function(i, component) {
+                                $.each(component.types, function(i, type) {
+                                    if (componentMapping[type]) {
+                                        var $field = vzAddress.$field.find('#'+vzAddress.fieldId+'-'+componentMapping[type]);
+                                        if ($field.val() === '') {
+                                            $field.val(component.short_name);
+                                        }
+                                    }
+                                });
+                            });
+
+                            // Update the lat/long fields
+                            vzAddress.$field.find('#'+vzAddress.fieldId+'-latitude').val(location.geometry.location.lat());
+                            vzAddress.$field.find('#'+vzAddress.fieldId+'-longitude').val(location.geometry.location.lng());
+                        }
+
                     } else {
-                        var latLng = new google.maps.LatLng(0, 0);
-                        vzAddress.map.setCenter(vzAddress.latLng);
-                        vzAddress.map.setZoom(0);
+                        if (vzAddress.showMap) {
+                            var latLng = new google.maps.LatLng(0, 0);
+                            vzAddress.map.setCenter(latLng);
+                            vzAddress.map.setZoom(0);
+                        }
+
+                        // Clear latitude and longitude fields
+                        vzAddress.$field.find('#'+vzAddress.fieldId+'-latitude').val('');
+                        vzAddress.$field.find('#'+vzAddress.fieldId+'-longitude').val('');
                     }
                 }
             );

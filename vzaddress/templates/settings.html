@@ -1,14 +1,11 @@
 {% import "_includes/forms" as forms %}
 
-{{ forms.lightswitchField({
-    label:      'Show "Name" field'|t,
-    name:       'showName',
-    on:         settings.showName
-}) }}
-
-{{ forms.selectField({
-    label:      'Default country',
-    name:       'defaultCountry',
-    value:      settings.defaultCountry,
-    options:    countries
+{{ forms.textField({
+    first:        true,
+    label:        "Google API Key"|t,
+    id:           'googleApiKey',
+    name:         'googleApiKey',
+    instructions: '<a href="https://developers.google.com/maps/documentation/javascript/tutorial#api_key" target="_blank">Learn how to get an API key</a> from Google’s documentation. In most cases you don’t actually need an API key, but it is recommended - and required if you end up needing more than 25,000 map loads per day.'|t,
+    value:        settings.googleApiKey,
+    errors:       settings.getErrors('googleApiKey')
 }) }}

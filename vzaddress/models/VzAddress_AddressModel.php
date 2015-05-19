@@ -13,6 +13,8 @@ class VzAddress_AddressModel extends BaseModel
             'region' => AttributeType::String,
             'postalCode' => AttributeType::String,
             'country' => AttributeType::String,
+            'latitude' => array(AttributeType::Number, 'length' => 10, 'decimals' => 6),
+            'longitude' => array(AttributeType::Number, 'length' => 10, 'decimals' => 6),
         );
     }
 
@@ -33,40 +35,34 @@ class VzAddress_AddressModel extends BaseModel
         return $address;
     }
 
-    public function text($formatted=false)
+    public function text($formatted = false)
     {
-        if ($formatted)
-        {
+        if ($formatted) {
             $this->setTemplatePath();
             return craft()->templates->render('text', array(
                 'address' => $this
             ));
-        }
-        else
-        {
+        } else {
             return implode(', ', $this->toArray());
         }
     }
 
-    public function html($format="plain")
+    public function html($format = "plain")
     {
         $this->setTemplatePath();
 
-        if (in_array($format, array('schema', 'microformat', 'rdfa')))
-        {
+        if (in_array($format, array('schema', 'microformat', 'rdfa'))) {
             $output = craft()->templates->render($format, array(
                 'address' => $this
             ));
-        }
-        else
-        {
+        } else {
             $output = str_replace("\n", '<br>', $this->text(true));
         }
 
         return TemplateHelper::getRaw($output);
     }
 
-    public function mapUrl($source='google', $params=array())
+    public function mapUrl($source = 'google', $params = array())
     {
         $params = count($params) ? '&' . http_build_query($params) : '';
 
@@ -84,7 +80,8 @@ class VzAddress_AddressModel extends BaseModel
             case 'mapquest':
                 $output = "http://mapq.st/map?q={$query}{$params}";
                 break;
-            case 'google': default:
+            case 'google':
+            default:
                 $output = "http://maps.google.com/maps?q={$query}{$params}";
                 break;
         }
@@ -92,7 +89,7 @@ class VzAddress_AddressModel extends BaseModel
         return $output;
     }
 
-    public function staticMapUrl($params=array())
+    public function staticMapUrl($params = array())
     {
         $source = isset($params['source']) ? strtolower($params['source']) : 'google';
         $width  = isset($params['width']) ? strtolower($params['width']) : '400';
@@ -101,9 +98,9 @@ class VzAddress_AddressModel extends BaseModel
         $zoom   = isset($params['zoom']) ? strtolower($params['zoom']) : '14';
         $format = isset($params['format']) ? strtolower($params['format']) : 'png';
         $type   = isset($params['type']) ? strtolower($params['type']) : 'roadmap';
-        $size   = isset($params['markerSize']) ? strtolower($params['markerSize']) : FALSE;
-        $label  = isset($params['markerLabel']) ? strtoupper($params['markerLabel']) : FALSE;
-        $color  = isset($params['markerColor']) ? strtolower($params['markerColor']) : FALSE;
+        $size   = isset($params['markerSize']) ? strtolower($params['markerSize']) : false;
+        $label  = isset($params['markerLabel']) ? strtoupper($params['markerLabel']) : false;
+        $color  = isset($params['markerColor']) ? strtolower($params['markerColor']) : false;
 
         // Normalize the color parameter
         $color = str_replace('#', '0x', $color);
@@ -113,15 +110,15 @@ class VzAddress_AddressModel extends BaseModel
 
         $output = isset($params['secure']) && $params['secure'] == 'yes' ? 'https' : 'http';
         $marker = '';
-        switch ($source)
-        {
+        switch ($source) {
             case 'yahoo':
                 // TODO
             case 'bing':
                 // TODO
             case 'mapquest':
                 // TODO
-            case 'google': default:
+            case 'google':
+            default:
                 $marker .= $size ? 'size:'.$size.'|' : '';
                 $marker .= $color ? 'color:'.$color.'|' : '';
                 $marker .= $label ? 'label:'.$label.'|' : '';
@@ -132,7 +129,7 @@ class VzAddress_AddressModel extends BaseModel
         return $output;
     }
 
-    public function staticMap($params=array())
+    public function staticMap($params = array())
     {
         $width  = isset($params['width']) ? strtolower($params['width']) : '400';
         $height = isset($params['height']) ? strtolower($params['height']) : '200';

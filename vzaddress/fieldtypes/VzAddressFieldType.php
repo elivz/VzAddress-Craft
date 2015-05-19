@@ -21,9 +21,9 @@ class VzAddressFieldType extends BaseFieldType
     protected function defineSettings()
     {
         return array(
-            'showName' => array(AttributeType::Bool, 'default' => TRUE),
+            'showMap' => array(AttributeType::Bool, 'default' => true),
+            'showName' => array(AttributeType::Bool, 'default' => true),
             'defaultCountry' => array(AttributeType::String),
-            'geocode' => array(AttributeType::Bool, 'default' => FALSE),
         );
     }
 
@@ -31,7 +31,7 @@ class VzAddressFieldType extends BaseFieldType
     {
         $countries = $this->_getCountryNames();
 
-        return craft()->templates->render('vzaddress/settings', array(
+        return craft()->templates->render('vzaddress/fieldtype/settings', array(
             'settings' => $this->getSettings(),
             'countries' => $countries
         ));
@@ -41,22 +41,27 @@ class VzAddressFieldType extends BaseFieldType
     {
         $settings = $this->getSettings();
 
-        if ( ! $value ) $value = new VzAddress_AddressModel();
-        if ( empty($value['country']) ) $value['country'] = $settings->defaultCountry;
+        if (!$value) {
+            $value = new VzAddress_AddressModel();
+        }
 
-        $id = craft()->templates->formatInputId($name);
-        $namespacedId = craft()->templates->namespaceInputId($id);
+        if (empty($value['country'])) {
+            $value['country'] = $settings->defaultCountry;
+        }
+
+        $inputId = craft()->templates->formatInputId($name);
+        $namespacedId = craft()->templates->namespaceInputId($inputId);
 
         // Include our Javascript
         craft()->templates->includeCssResource('vzaddress/css/input.css');
+        craft()->templates->includeJsFile('https://maps.googleapis.com/maps/api/js?v=3');
         craft()->templates->includeJsResource('vzaddress/js/input.js');
         craft()->templates->includeJs("$('#{$namespacedId}').vzAddress();");
-        craft()->templates->includeFootNode('<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>');
 
         $countries = $this->_getCountryNames();
 
-        return craft()->templates->render('vzaddress/input', array(
-            'id' => $id,
+        return craft()->templates->render('vzaddress/fieldtype/input', array(
+            'id' => $inputId,
             'name' => $name,
             'values' => $value,
             'countries' => $countries,
@@ -66,12 +71,9 @@ class VzAddressFieldType extends BaseFieldType
 
     public function prepValueFromPost($value)
     {
-        if ( empty($value) )
-        {
+        if (empty($value)) {
             return new VzAddress_AddressModel();
-        }
-        else
-        {
+        } else {
             return new VzAddress_AddressModel($value);
         }
     }
@@ -81,8 +83,7 @@ class VzAddressFieldType extends BaseFieldType
         $localeData = craft()->i18n->getLocaleData();
         $countries = array();
 
-        foreach ($this->countryCodes as $code)
-        {
+        foreach ($this->countryCodes as $code) {
             $countries[$code] = $localeData->getTerritory($code);
         }
 

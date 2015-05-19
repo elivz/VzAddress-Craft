@@ -10,10 +10,9 @@
  }
 
 .vzaddress-fields {
-    display: table-cell;
-    width: 60%;
-    max-width: 450px;
-    padding-right: 1.5em;
+    display: block;
+    width: 100%;
+    padding: 0;
 }
 
 .vzaddress-field {
@@ -54,7 +53,7 @@
 }
 
 .vzaddress-map {
-    display: table-cell;
+    display: none;
     width: 40%;
     height: 100%;
     border-radius: 2px;
@@ -63,14 +62,13 @@
 
 /* Spcial styling for wide screens */
 
-.narrow .vzaddress-fields {
-    display: block;
-    width: 100%;
-    padding: 0;
+.has-map .vzaddress-fields {
+    display: table-cell;
+    width: 60%;
+    padding-right: 1.5em;
 }
 
-.narrow .vzaddress-map {
-    display: none;
+.has-map .vzaddress-map {
+    display: table-cell;
 }
-
 
