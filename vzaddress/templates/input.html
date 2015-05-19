@@ -1,63 +1,73 @@
 {% import "_includes/forms" as forms %}
 
 <div id="{{ id }}" class="vzaddress-wrapper">
-    {% if settings.showName %}
-        <div class="vzaddress-field vzaddress-name">
-            <label for="{{ id~'-name' }}">{{ 'Name'|t }}</label>
+    <div class="vzaddress-fields">
+        {% if settings.showName %}
+            <div class="vzaddress-field vzaddress-name">
+                <label for="{{ id~'-name' }}">{{ 'Name'|t }}</label>
+                {{ forms.text({
+                    id: id~'-name',
+                    name: name~'[name]',
+                    value: values.name,
+                    placeholder: 'Name'|t
+                }) }}
+            </div>
+        {% endif %}
+        <div class="vzaddress-field vzaddress-street">
+            <label for="{{ id~'-street' }}">{{ 'Street Address'|t }}</label>
             {{ forms.text({
-                id: id~'-name',
-                name: name~'[name]',
-                value: values.name
+                id: id~'-street',
+                name: name~'[street]',
+                value: values.street,
+                placeholder: 'Street Address'|t
             }) }}
         </div>
-    {% endif %}
-    <div class="vzaddress-field vzaddress-street">
-        <label for="{{ id~'-street' }}">{{ 'Street Address'|t }}</label>
-        {{ forms.text({
-            id: id~'-street',
-            name: name~'[street]',
-            value: values.street
-        }) }}
+        <div class="vzaddress-field vzaddress-street2">
+            <label for="{{ id~'-street2' }}">{{ 'Street Address 2'|t }}</label>
+            {{ forms.text({
+                id: id~'-street2',
+                name: name~'[street2]',
+                value: values.street2,
+                placeholder: 'Street Address 2'|t
+            }) }}
+        </div>
+        <div class="vzaddress-field vzaddress-city">
+            <label for="{{ id~'-city' }}">{{ 'City'|t }}</label>
+            {{ forms.text({
+                id: id~'-city',
+                name: name~'[city]',
+                value: values.city,
+                placeholder: 'City'|t
+            }) }}
+        </div>
+        <div class="vzaddress-field vzaddress-region">
+            <label for="{{ id~'-region' }}">{{ 'State/Province'|t }}</label>
+            {{ forms.text({
+                id: id~'-region',
+                name: name~'[region]',
+                value: values.region,
+                placeholder: 'State/Province'|t
+            }) }}
+        </div>
+        <div class="vzaddress-field vzaddress-postalCode">
+            <label for="{{ id~'-postalCode' }}">{{ 'Postal Code'|t }}</label>
+            {{ forms.text({
+                id: id~'-postalCode',
+                name: name~'[postalCode]',
+                value: values.postalCode,
+                placeholder: 'Postal Code'|t
+            }) }}
+        </div>
+        <div class="vzaddress-field vzaddress-country">
+            <label for="{{ id~'-country' }}">{{ 'Country'|t }}</label>
+            {{ forms.select({
+                id: id~'-country',
+                name: name~'[country]',
+                value: values.country,
+                options: countries
+            }) }}
+        </div>
     </div>
-    <div class="vzaddress-field vzaddress-street2">
-        <label for="{{ id~'-street2' }}">{{ 'Street Address 2'|t }}</label>
-        {{ forms.text({
-            id: id~'-street2',
-            name: name~'[street2]',
-            value: values.street2
-        }) }}
-    </div>
-    <div class="vzaddress-field vzaddress-city">
-        <label for="{{ id~'-city' }}">{{ 'City'|t }}</label>
-        {{ forms.text({
-            id: id~'-city',
-            name: name~'[city]',
-            value: values.city
-        }) }}
-    </div>
-    <div class="vzaddress-field vzaddress-region">
-        <label for="{{ id~'-region' }}">{{ 'State/Province'|t }}</label>
-        {{ forms.text({
-            id: id~'-region',
-            name: name~'[region]',
-            value: values.region
-        }) }}
-    </div>
-    <div class="vzaddress-field vzaddress-postalCode">
-        <label for="{{ id~'-postalCode' }}">{{ 'Postal Code'|t }}</label>
-        {{ forms.text({
-            id: id~'-postalCode',
-            name: name~'[postalCode]',
-            value: values.postalCode
-        }) }}
-    </div>
-    <div class="vzaddress-field vzaddress-country">
-        <label for="{{ id~'-country' }}">{{ 'Country'|t }}</label>
-        {{ forms.select({
-            id: id~'-country',
-            name: name~'[country]',
-            value: values.country,
-            options: countries
-        }) }}
+    <div class="vzaddress-map">
     </div>
 </div>

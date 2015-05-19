@@ -51,6 +51,7 @@ class VzAddressFieldType extends BaseFieldType
         craft()->templates->includeCssResource('vzaddress/css/input.css');
         craft()->templates->includeJsResource('vzaddress/js/input.js');
         craft()->templates->includeJs("$('#{$namespacedId}').vzAddress();");
+        craft()->templates->includeFootNode('<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>');
 
         $countries = $this->_getCountryNames();
 
