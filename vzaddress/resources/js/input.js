@@ -30,7 +30,7 @@
                 {
                     "featureType": "landscape",
                     "stylers": [
-                        { "color": "#fdfdfd" }
+                        { "color": "#fcfcfc" }
                     ]
                 },
                 {
@@ -102,7 +102,6 @@
         fieldId: false,
         map: false,
         marker: false,
-        latLng: false,
 
         init: function() {
             var vzAddress = this;
@@ -116,8 +115,10 @@
                 vzAddress.$field.toggleClass('has-map', showMap);
             });
 
-            vzAddress.initMap();
-            vzAddress.$field.find('input, select').on('change', $.proxy(vzAddress.geocode, vzAddress));
+            setTimeout(function() {
+                vzAddress.initMap();
+                vzAddress.$field.find('input, select').on('change', $.proxy(vzAddress.geocode, vzAddress));
+            }, 10);
         },
 
         initMap: function() {
@@ -141,11 +142,6 @@
                 return $(this).val() || null;
             }).get().join(', ');
 
-            // Clear existing marker
-            if (vzAddress.marker) {
-                vzAddress.marker.setMap(null);
-            }
-
             vzAddress.geocoder.geocode(
                 { 'address': address },
                 $.proxy(vzAddress.updateMap, vzAddress)
@@ -160,39 +156,47 @@
                 'postal_code': 'postalCode'
             };
 
-            if (status == google.maps.GeocoderStatus.OK) {
-                if (results.length === 1) {
-                    var location = results[0];
+            if (status == google.maps.GeocoderStatus.OK && results.length === 1) {
+                var location = results[0];
 
-                    if (vzAddress.showMap) {
-                        vzAddress.map.fitBounds(location.geometry.viewport);
+                if (vzAddress.showMap) {
+                    vzAddress.map.fitBounds(location.geometry.viewport);
+
+                    if (vzAddress.marker) {
+                        vzAddress.marker.setPosition(location.geometry.location);
+                    } else {
                         vzAddress.marker = new google.maps.Marker({
                             position: location.geometry.location,
                             map: vzAddress.map
                         });
                     }
-
-                    // Interpolate missing data
-                    $.each(location.address_components, function(i, component) {
-                        $.each(component.types, function(i, type) {
-                            if (componentMapping[type]) {
-                                var $field = vzAddress.$field.find('#'+vzAddress.fieldId+'-'+componentMapping[type]);
-                                if ($field.val() === '') {
-                                    $field.val(component.short_name);
-                                }
-                            }
-                        });
-                    });
-
-                    // Update the lat/long fields
-                    vzAddress.$field.find('#'+vzAddress.fieldId+'-latitude').val(location.geometry.location.lat());
-                    vzAddress.$field.find('#'+vzAddress.fieldId+'-longitude').val(location.geometry.location.lng());
                 }
+
+                // Interpolate missing data
+                $.each(location.address_components, function(i, component) {
+                    $.each(component.types, function(i, type) {
+                        if (componentMapping[type]) {
+                            var $field = vzAddress.$field.find('#'+vzAddress.fieldId+'-'+componentMapping[type]);
+                            if ($field.val() === '') {
+                                $field.val(component.short_name);
+                            }
+                        }
+                    });
+                });
+
+                // Update the lat/long fields
+                vzAddress.$field.find('#'+vzAddress.fieldId+'-latitude').val(location.geometry.location.lat());
+                vzAddress.$field.find('#'+vzAddress.fieldId+'-longitude').val(location.geometry.location.lng());
             } else {
                 if (vzAddress.showMap) {
                     var latLng = new google.maps.LatLng(0, 0);
                     vzAddress.map.setCenter(latLng);
                     vzAddress.map.setZoom(0);
+
+                    if (vzAddress.marker) {
+                        vzAddress.marker.setMap(null);
+                        vzAddress.marker = false;
+                    }
                 }
 
                 // Clear latitude and longitude fields

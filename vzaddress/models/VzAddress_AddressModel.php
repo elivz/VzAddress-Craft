@@ -18,11 +18,6 @@ class VzAddress_AddressModel extends BaseModel
         );
     }
 
-    protected function setTemplatePath()
-    {
-        craft()->path->setTemplatesPath(craft()->path->getPluginsPath() . 'vzaddress/templates/_frontend/');
-    }
-
     public function __toString()
     {
         return $this->text(true);
@@ -38,18 +33,25 @@ class VzAddress_AddressModel extends BaseModel
     public function text($formatted = false)
     {
         if ($formatted) {
-            $this->setTemplatePath();
-            return craft()->templates->render('text', array(
+            $originalTemplatesPath = craft()->path->getTemplatesPath();
+            craft()->path->setTemplatesPath(craft()->path->getPluginsPath() . 'vzaddress/templates/_frontend/');
+
+            $output = craft()->templates->render('text', array(
                 'address' => $this
             ));
+
+            craft()->path->setTemplatesPath($originalTemplatesPath);
         } else {
-            return implode(', ', $this->toArray());
+            $output = implode(', ', $this->toArray());
         }
+
+        return $output;
     }
 
     public function html($format = "plain")
     {
-        $this->setTemplatePath();
+        $originalTemplatesPath = craft()->path->getTemplatesPath();
+        craft()->path->setTemplatesPath(craft()->path->getPluginsPath() . 'vzaddress/templates/_frontend/');
 
         if (in_array($format, array('schema', 'microformat', 'rdfa'))) {
             $output = craft()->templates->render($format, array(
@@ -58,6 +60,8 @@ class VzAddress_AddressModel extends BaseModel
         } else {
             $output = str_replace("\n", '<br>', $this->text(true));
         }
+
+        craft()->path->setTemplatesPath($originalTemplatesPath);
 
         return TemplateHelper::getRaw($output);
     }
