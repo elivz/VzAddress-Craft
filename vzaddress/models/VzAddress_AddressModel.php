@@ -3,41 +3,36 @@ namespace Craft;
 
 class VzAddress_AddressModel extends BaseModel
 {
-    protected function defineAttributes()
-    {
+    protected function defineAttributes() {
         return array(
-            'name' => AttributeType::String,
-            'street' => AttributeType::String,
-            'street2' => AttributeType::String,
-            'city' => AttributeType::String,
-            'region' => AttributeType::String,
+            'name'       => AttributeType::String,
+            'street'     => AttributeType::String,
+            'street2'    => AttributeType::String,
+            'city'       => AttributeType::String,
+            'region'     => AttributeType::String,
             'postalCode' => AttributeType::String,
-            'country' => AttributeType::String,
-            'latitude' => array(AttributeType::Number, 'length' => 10, 'decimals' => 6),
-            'longitude' => array(AttributeType::Number, 'length' => 10, 'decimals' => 6),
+            'country'    => AttributeType::String,
         );
     }
 
-    public function __toString()
-    {
+    public function __toString() {
         return $this->text(true);
     }
 
-    public function toArray()
-    {
-        $address = array_filter($this->attributes);
+    public function toArray() {
+        $address = array_filter($this->getAttributes());
         $address['country'] = $this->countryName;
         return $address;
     }
 
-    public function text($formatted = false)
-    {
+    public function text($formatted = false) {
         if ($formatted) {
             $newTemplatePath = craft()->path->getPluginsPath() . 'vzaddress/templates/_frontend/';
 
             $originalTemplatesPath = method_exists(craft()->templates, 'getTemplatesPath') ?
                 craft()->templates->getTemplatesPath() :
                 craft()->path->getTemplatesPath();
+
             method_exists(craft()->templates, 'setTemplatesPath') ?
                 craft()->templates->setTemplatesPath($newTemplatePath) :
                 craft()->path->setTemplatesPath($newTemplatePath);
@@ -56,10 +51,16 @@ class VzAddress_AddressModel extends BaseModel
         return $output;
     }
 
-    public function html($format = "plain")
-    {
-        $originalTemplatesPath = craft()->path->getTemplatesPath();
-        craft()->path->setTemplatesPath(craft()->path->getPluginsPath() . 'vzaddress/templates/_frontend/');
+    public function html($format = "plain") {
+        $newTemplatePath = craft()->path->getPluginsPath() . 'vzaddress/templates/_frontend/';
+
+        $originalTemplatesPath = method_exists(craft()->templates, 'getTemplatesPath') ?
+            craft()->templates->getTemplatesPath() :
+            craft()->path->getTemplatesPath();
+
+        method_exists(craft()->templates, 'setTemplatesPath') ?
+            craft()->templates->setTemplatesPath($newTemplatePath) :
+            craft()->path->setTemplatesPath($newTemplatePath);
 
         if (in_array($format, array('schema', 'microformat', 'rdfa'))) {
             $output = craft()->templates->render($format, array(
@@ -69,20 +70,20 @@ class VzAddress_AddressModel extends BaseModel
             $output = str_replace("\n", '<br>', $this->text(true));
         }
 
-        craft()->path->setTemplatesPath($originalTemplatesPath);
+        method_exists(craft()->templates, 'setTemplatesPath') ?
+            craft()->templates->setTemplatesPath($originalTemplatesPath) :
+            craft()->path->setTemplatesPath($originalTemplatesPath);
 
         return TemplateHelper::getRaw($output);
     }
 
-    public function mapUrl($source = 'google', $params = array())
-    {
+    public function mapUrl($source = 'google', $params = array()) {
         $params = count($params) ? '&' . http_build_query($params) : '';
 
         // Create the url-encoded address
         $query = urlencode(implode(', ', $this->toArray()));
 
-        switch ($source)
-        {
+        switch ($source) {
             case 'yahoo':
                 $output = "http://maps.yahoo.com/#q={$query}{$params}";
                 break;
@@ -101,8 +102,7 @@ class VzAddress_AddressModel extends BaseModel
         return $output;
     }
 
-    public function staticMapUrl($params = array())
-    {
+    public function staticMapUrl($params = array()) {
         $source = isset($params['source']) ? strtolower($params['source']) : 'google';
         $width  = isset($params['width']) ? strtolower($params['width']) : '400';
         $height = isset($params['height']) ? strtolower($params['height']) : '200';
@@ -141,8 +141,7 @@ class VzAddress_AddressModel extends BaseModel
         return $output;
     }
 
-    public function staticMap($params = array())
-    {
+    public function staticMap($params = array()) {
         $width  = isset($params['width']) ? strtolower($params['width']) : '400';
         $height = isset($params['height']) ? strtolower($params['height']) : '200';
         $map_url = $this->staticMapUrl($params);
@@ -156,8 +155,7 @@ class VzAddress_AddressModel extends BaseModel
      * Virtual Attributes
      */
 
-    public function getCountryName()
-    {
+    public function getCountryName() {
         $localeData = craft()->i18n->getLocaleData();
         return $localeData->getTerritory($this->country);
     }

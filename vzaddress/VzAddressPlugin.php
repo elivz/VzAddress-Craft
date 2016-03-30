@@ -6,33 +6,27 @@ namespace Craft;
  */
 class VzAddressPlugin extends BasePlugin
 {
-    public function getName()
-    {
+    public function getName() {
         return 'VZ Address';
     }
 
-    public function getVersion()
-    {
+    public function getVersion() {
         return '1.0.2';
     }
 
-    public function getDeveloper()
-    {
+    public function getDeveloper() {
         return 'Eli Van Zoeren';
     }
 
-    public function getDeveloperUrl()
-    {
+    public function getDeveloperUrl() {
         return 'http://elivz.com';
     }
 
-    public function getDocumentationUrl()
-    {
+    public function getDocumentationUrl() {
         return 'https://github.com/elivz/VzAddress-Craft/blob/master/README.md';
     }
 
-    public function getReleaseFeedUrl()
-    {
+    public function getReleaseFeedUrl() {
         return 'https://raw.githubusercontent.com/elivz/VzAddress-Craft/master/changelog.json';
     }
 }
