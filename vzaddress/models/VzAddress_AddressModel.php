@@ -33,14 +33,22 @@ class VzAddress_AddressModel extends BaseModel
     public function text($formatted = false)
     {
         if ($formatted) {
-            $originalTemplatesPath = craft()->path->getTemplatesPath();
-            craft()->path->setTemplatesPath(craft()->path->getPluginsPath() . 'vzaddress/templates/_frontend/');
+            $newTemplatePath = craft()->path->getPluginsPath() . 'vzaddress/templates/_frontend/';
+
+            $originalTemplatesPath = method_exists(craft()->templates, 'getTemplatesPath') ?
+                craft()->templates->getTemplatesPath() :
+                craft()->path->getTemplatesPath();
+            method_exists(craft()->templates, 'setTemplatesPath') ?
+                craft()->templates->setTemplatesPath($newTemplatePath) :
+                craft()->path->setTemplatesPath($newTemplatePath);
 
             $output = craft()->templates->render('text', array(
                 'address' => $this
             ));
 
-            craft()->path->setTemplatesPath($originalTemplatesPath);
+            method_exists(craft()->templates, 'setTemplatesPath') ?
+                craft()->templates->setTemplatesPath($originalTemplatesPath) :
+                craft()->path->setTemplatesPath($originalTemplatesPath);
         } else {
             $output = implode(', ', $this->toArray());
         }

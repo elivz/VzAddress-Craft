@@ -52,23 +52,3 @@
     width: 100%;
 }
 
-.vzaddress-map {
-    display: none;
-    width: 40%;
-    height: 100%;
-    border-radius: 2px;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 2px 8px -2px rgba(0, 0, 0, 0.1);
-}
-
-/* Special styling for wide screens */
-
-.has-map .vzaddress-fields {
-    display: table-cell;
-    width: 60%;
-    padding-right: 1.5em;
-}
-
-.has-map .vzaddress-map {
-    display: table-cell;
-}
-

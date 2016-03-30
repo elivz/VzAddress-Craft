@@ -3,7 +3,6 @@
         <div itemprop="name">{{ address.name }}</div>
 {% endif %}
     <div {% if address.name %}itemprop="address"{% endif %} itemscope itemtype="http://schema.org/PostalAddress">
-        {% if address.name %}<div itemprop="name">{{ address.name }}</div>{% endif %}
         {% if address.street %}<div itemprop="streetAddress">{{ address.street }}</div>{% endif %}
         {% if address.street2 %}<div itemprop="streetAddress">{{ address.street2 }}</div>{% endif %}
         <div>

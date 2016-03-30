@@ -23,7 +23,6 @@ class VzAddressFieldType extends BaseFieldType
         $defaultCountry = strtoupper(craft()->i18n->getLocaleData()->getTerritoryID(craft()->i18n->getPrimarySiteLocale()));
 
         return array(
-            'showMap' => array(AttributeType::Bool, 'default' => true),
             'showName' => array(AttributeType::Bool, 'default' => true),
             'defaultCountry' => array(AttributeType::String, 'default' => $defaultCountry),
         );
@@ -56,7 +55,6 @@ class VzAddressFieldType extends BaseFieldType
 
         // Include our Javascript
         craft()->templates->includeCssResource('vzaddress/css/input.css');
-        craft()->templates->includeJsFile('https://maps.googleapis.com/maps/api/js?v=3');
         craft()->templates->includeJsResource('vzaddress/js/input.js');
         craft()->templates->includeJs("$('#{$namespacedId}').vzAddress();");
 

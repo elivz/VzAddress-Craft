@@ -13,7 +13,8 @@
         "date": "2015-08-11T12:00:00+0000",
         "notes": [
             "[Added] Plugin icon for Craft 2.5."
-            "[Improved] Use the site's default locale as the default country for new fields."
+            "[Improved] Use the site's default locale as the default country for new fields.",
+            "[Fixed] Remove duplicate name in microformatted outputs."
         ]
     }
 ]

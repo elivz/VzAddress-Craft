@@ -1,6 +1,6 @@
 {% import "_includes/forms" as forms %}
 
-<div id="{{ id }}" class="vzaddress-wrapper {% if settings.showMap %}has-map{% endif %}">
+<div id="{{ id }}" class="vzaddress-wrapper">
     <div class="vzaddress-fields">
         {% if settings.showName %}
             <div class="vzaddress-field vzaddress-name">
@@ -86,8 +86,4 @@
             value: values.longitude
         }) }}
     </div>
-
-    {% if settings.showMap %}
-        <div class="vzaddress-map"></div>
-    {% endif %}
 </div>
