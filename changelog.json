@@ -1,0 +1,19 @@
+[
+    {
+        "version": "1.0.2",
+        "downloadUrl": "https://github.com/elivz/VzAddress-Craft/archive/1.0.2.zip",
+        "date": "2015-08-11T12:00:00+0000",
+        "notes": [
+            "[Fixed] Reset the template path after including the formatting address, so includes later in the template aren't broken."
+        ]
+    },
+    {
+        "version": "1.0.3",
+        "downloadUrl": "https://github.com/elivz/VzAddress-Craft/archive/1.0.3.zip",
+        "date": "2015-08-11T12:00:00+0000",
+        "notes": [
+            "[Added] Plugin icon for Craft 2.5."
+            "[Improved] Use the site's default locale as the default country for new fields."
+        ]
+    }
+]

@@ -3,22 +3,30 @@
  *  by Eli Van Zoeren - http://elivz.com
  */
 
-.vzaddress-wrapper {
+ .vzaddress-wrapper {
+    position: relative;
     display: table;
     width: 100%;
+ }
+
+.vzaddress-fields {
+    display: block;
+    width: 100%;
+    padding: 0;
 }
 
 .vzaddress-field {
     padding-bottom: 0.75em;
-}
-.vzaddress-field:last-of-type {
-    clear: both;
-    padding-bottom: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .vzaddress-field label {
     position: absolute;
-    left: -9999px;
+    overflow: hidden;
+    width: 0;
+    height: 0;
     clip: rect(0 0 0 0);
 }
 
@@ -26,17 +34,17 @@
 .vzaddress-postalCode {
     float: left;
     width: 50%;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-.vzaddress-postalCode {
-    padding-left: 0.375em;
+    padding-left: 0.25em;
 }
 .vzaddress-region {
+    padding-left: 0;
     padding-right: 0.375em;
 }
 
+.vzaddress-country {
+    clear: both;
+    padding-bottom: 0;
+}
 .vzaddress-country .select {
     display: block;
 }
@@ -47,9 +55,9 @@
 .vzaddress-map {
     display: none;
     width: 40%;
+    height: 100%;
     border-radius: 2px;
-    border: 1px solid rgba(0, 0, 0, 0.075);
-    box-shadow: 0 1px 8px -1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 2px 8px -2px rgba(0, 0, 0, 0.1);
 }
 
 /* Special styling for wide screens */

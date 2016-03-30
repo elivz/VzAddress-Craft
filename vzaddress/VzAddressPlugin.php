@@ -13,7 +13,7 @@ class VzAddressPlugin extends BasePlugin
 
     public function getVersion()
     {
-        return '1.1.1';
+        return '1.0.2';
     }
 
     public function getDeveloper()
@@ -26,17 +26,13 @@ class VzAddressPlugin extends BasePlugin
         return 'http://elivz.com';
     }
 
-    protected function defineSettings()
+    public function getDocumentationUrl()
     {
-        return array(
-            'googleApiKey' => AttributeType::String,
-        );
+        return 'https://github.com/elivz/VzAddress-Craft/blob/master/README.md';
     }
 
-    public function getSettingsHtml()
+    public function getReleaseFeedUrl()
     {
-        return craft()->templates->render('vzaddress/settings', array(
-            'settings' => $this->getSettings()
-        ));
+        return 'https://raw.githubusercontent.com/elivz/VzAddress-Craft/master/changelog.json';
     }
 }

@@ -20,10 +20,12 @@ class VzAddressFieldType extends BaseFieldType
 
     protected function defineSettings()
     {
+        $defaultCountry = strtoupper(craft()->i18n->getLocaleData()->getTerritoryID(craft()->i18n->getPrimarySiteLocale()));
+
         return array(
             'showMap' => array(AttributeType::Bool, 'default' => true),
             'showName' => array(AttributeType::Bool, 'default' => true),
-            'defaultCountry' => array(AttributeType::String),
+            'defaultCountry' => array(AttributeType::String, 'default' => $defaultCountry),
         );
     }
 
