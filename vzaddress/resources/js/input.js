@@ -6,18 +6,13 @@
  */
 
  ;(function ( $, window, document, undefined ) {
-
-    var pluginName = "vzAddress",
-        defaults = {
-        };
-
+    var pluginName = "vzAddress";
+    var defaults = {};
 
     // Plugin constructor
     function Plugin( element, options ) {
         this.element = element;
-
         this.options = $.extend( {}, defaults, options) ;
-
         this._defaults = defaults;
         this._name = pluginName;
 
@@ -25,12 +20,11 @@
     }
 
     Plugin.prototype = {
-
         wideMode: 0,
 
         init: function() {
-            var vzUrl = this,
-                $field = $(this.element);
+            var vzUrl = this;
+            var $field = $(this.element);
 
             $(window).on('resize', function() {
                 wideMode = $field.width() > 500;

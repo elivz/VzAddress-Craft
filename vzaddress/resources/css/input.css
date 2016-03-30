@@ -34,7 +34,11 @@
 .vzaddress-postalCode {
     float: left;
     width: 50%;
-    padding-left: 0.25em;
+    padding-left: 0.375em;
+}
+.wide .vzaddress-region,
+.wide .vzaddress-postalCode {
+    width: 25%;
 }
 .vzaddress-region {
     padding-left: 0;
@@ -45,6 +49,13 @@
     clear: both;
     padding-bottom: 0;
 }
+.wide .vzaddress-country {
+    float: right;
+    clear: none;
+    width: 50%;
+    padding-left: 0.75em;
+}
+
 .vzaddress-country .select {
     display: block;
 }
