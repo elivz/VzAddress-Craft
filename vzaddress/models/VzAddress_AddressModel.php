@@ -113,6 +113,7 @@ class VzAddress_AddressModel extends BaseModel
         $size   = isset($params['markerSize']) ? strtolower($params['markerSize']) : false;
         $label  = isset($params['markerLabel']) ? strtoupper($params['markerLabel']) : false;
         $color  = isset($params['markerColor']) ? strtolower($params['markerColor']) : false;
+        $key    = isset($params['key']) ? strtolower($params['key']) : false;
 
         // Normalize the color parameter
         $color = str_replace('#', '0x', $color);
@@ -135,6 +136,7 @@ class VzAddress_AddressModel extends BaseModel
                 $marker .= $color ? 'color:'.$color.'|' : '';
                 $marker .= $label ? 'label:'.$label.'|' : '';
                 $output .= "://maps.googleapis.com/maps/api/staticmap?zoom={$zoom}&size={$width}x{$height}&scale={$scale}&format={$format}&maptype={$type}&markers={$marker}{$address}&sensor=false";
+                $output .= $key ? $output.'&key='.$key : $output;
                 break;
         }
 
@@ -145,7 +147,7 @@ class VzAddress_AddressModel extends BaseModel
         $width  = isset($params['width']) ? strtolower($params['width']) : '400';
         $height = isset($params['height']) ? strtolower($params['height']) : '200';
         $map_url = $this->staticMapUrl($params);
-        $address = htmlspecialchars($this->inline());
+        $address = htmlspecialchars($this->text());
 
         $output = '<img src="'.$map_url.'" alt="'.$address.'" width="'.$width.'" height="'.$height.'">';
         return TemplateHelper::getRaw($output);

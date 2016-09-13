@@ -1,5 +1,14 @@
 [
     {
+        "version": "1.0.3",
+        "downloadUrl": "https://github.com/elivz/VzAddress-Craft/archive/1.0.3.zip",
+        "date": "2016-09-12T12:00:00+00:00",
+        "notes": [
+            "[Fixed] Google static maps output.",
+            "[Added] Static maps template tags now accept the `key` parameter for your Google API key."
+        ]
+    },
+    {
         "version": "1.0.2",
         "downloadUrl": "https://github.com/elivz/VzAddress-Craft/archive/1.0.2.zip",
         "date": "2015-08-11T12:00:00+0000",
