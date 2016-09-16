@@ -1,5 +1,13 @@
 [
     {
+        "version": "1.0.5",
+        "downloadUrl": "https://github.com/elivz/VzAddress-Craft/archive/1.0.5.zip",
+        "date": "2016-09-16T12:00:00+00:00",
+        "notes": [
+            "[Fixed] Duplicate map URL output."
+        ]
+    },
+    {
         "version": "1.0.4",
         "downloadUrl": "https://github.com/elivz/VzAddress-Craft/archive/1.0.4.zip",
         "date": "2016-09-12T12:00:00+00:00",
