@@ -136,7 +136,7 @@ class VzAddress_AddressModel extends BaseModel
                 $marker .= $color ? 'color:'.$color.'|' : '';
                 $marker .= $label ? 'label:'.$label.'|' : '';
                 $output .= "://maps.googleapis.com/maps/api/staticmap?zoom={$zoom}&size={$width}x{$height}&scale={$scale}&format={$format}&maptype={$type}&markers={$marker}{$address}&sensor=false";
-                $output .= $key ? $output.'&key='.$key : $output;
+                $output = $key ? $output.'&key='.$key : $output;
                 break;
         }
 
