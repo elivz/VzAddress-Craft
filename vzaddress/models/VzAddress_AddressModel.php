@@ -113,7 +113,7 @@ class VzAddress_AddressModel extends BaseModel
         $size   = isset($params['markerSize']) ? strtolower($params['markerSize']) : false;
         $label  = isset($params['markerLabel']) ? strtoupper($params['markerLabel']) : false;
         $color  = isset($params['markerColor']) ? strtolower($params['markerColor']) : false;
-        $key    = isset($params['key']) ? strtolower($params['key']) : false;
+        $key    = isset($params['key']) ? $params['key'] : false;
 
         // Normalize the color parameter
         $color = str_replace('#', '0x', $color);

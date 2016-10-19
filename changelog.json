@@ -1,5 +1,13 @@
 [
     {
+        "version": "1.0.6",
+        "downloadUrl": "https://github.com/elivz/VzAddress-Craft/archive/1.0.6.zip",
+        "date": "2016-10-19T12:00:00+00:00",
+        "notes": [
+            "[Fixed] Leave API key in original case."
+        ]
+    },
+    {
         "version": "1.0.5",
         "downloadUrl": "https://github.com/elivz/VzAddress-Craft/archive/1.0.5.zip",
         "date": "2016-09-16T12:00:00+00:00",
@@ -38,16 +46,11 @@
         ]
     },
     {
-        "version": "1.0.3",
-        "downloadUrl": "https://github.com/elivz/VzAddress-Craft/archive/1.0.3.zip",
-        "date": "2016-03-29T23:00:00+0000",
+        "version": "1.0.0",
+        "downloadUrl": "",
+        "date": "2014-12-08T12:00:00+0000",
         "notes": [
-            "**Now requires Craft 2.5 or higher.**",
-            "[Added] Plugin icon for Craft 2.5.",
-            "[Added] Can now use Address fields as a column in element indexes.",
-            "[Improved] Better custom field layout.",
-            "[Improved] Use the site's default locale as the default country for new fields.",
-            "[Fixed] Remove duplicate name in microformatted outputs."
+            "Initial release for Craft."
         ]
     }
 ]
