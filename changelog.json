@@ -4,7 +4,7 @@
         "downloadUrl": "https://github.com/elivz/VzAddress-Craft/archive/1.1.0.zip",
         "date": "2016-10-23T12:00:00+00:00",
         "notes": [
-            "[Added] Support for importing address data using the [https://github.com/boboldehampsink/import](Import) plugin."
+            "[Added] Support for importing address data using the [Import](https://github.com/boboldehampsink/import) plugin."
         ]
     },
     {
