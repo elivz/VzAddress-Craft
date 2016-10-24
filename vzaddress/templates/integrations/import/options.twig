@@ -1,8 +1,7 @@
 {% set fieldParts = f.fieldType.prepValueFromPost(null).attributes|keys %}
 
-{% for part in fieldParts %}
-	{% set optionHandle = f.handle ~ '[' ~ part ~ ']' %}
-	{% set optionLabel  = f.name ~ ' (' ~ part ~ ')' %}
-	{% set match = (column|lower in [optionLabel|lower, part|lower] ) %}
-	<option value="{{ optionHandle }}" {{ match ? 'selected' }}>{{ optionLabel }}</option>
-{% endfor %}
+    {% for part in fieldParts %}
+        {% set value = f.handle ~ '[' ~ part ~ ']' %}
+        {% set label = f.name ~ ' — ' ~ part|replace('/([A-Z|0-9])/', ' \\1')|title %}
+        <option value="{{ value }}" {{ (column == part) ? 'selected' }}>{{ label }}</option>
+    {% endfor %}
