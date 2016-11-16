@@ -11,7 +11,7 @@ class VzAddressPlugin extends BasePlugin
     }
 
     public function getVersion() {
-        return '1.1.0';
+        return '1.1.1';
     }
 
     public function getSchemaVersion() {
@@ -44,7 +44,7 @@ class VzAddressPlugin extends BasePlugin
     public function modifyImportRow($element, $map, $data)
     {
         $rowData = array_combine($map, $data);
-        $content = [];
+        $content = array();
 
         foreach ($rowData as $key => $value) {
             if (preg_match('/^(.*)\[(.*)]$/', $key, $matches)) {

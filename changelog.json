@@ -1,5 +1,13 @@
 [
     {
+        "version": "1.1.1",
+        "downloadUrl": "https://github.com/elivz/VzAddress-Craft/archive/1.1.1.zip",
+        "date": "2016-11-16T12:00:00+00:00",
+        "notes": [
+            "[Fixed] Prevent syntax error in PHP 5.3."
+        ]
+    },
+    {
         "version": "1.1.0",
         "downloadUrl": "https://github.com/elivz/VzAddress-Craft/archive/1.1.0.zip",
         "date": "2016-10-23T12:00:00+00:00",
