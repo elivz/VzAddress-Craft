@@ -79,23 +79,24 @@ class VzAddress_AddressModel extends BaseModel
 
     public function mapUrl($source = 'google', $params = array()) {
         $params = count($params) ? '&' . http_build_query($params) : '';
+        $output = isset($params['secure']) && $params['secure'] == 'yes' ? 'https' : 'http';
 
         // Create the url-encoded address
         $query = urlencode(implode(', ', $this->toArray()));
-
+        
         switch ($source) {
             case 'yahoo':
-                $output = "http://maps.yahoo.com/#q={$query}{$params}";
+                $output .= "://maps.yahoo.com/#q={$query}{$params}";
                 break;
             case 'bing':
-                $output = "http://www.bing.com/maps/?v=2&where1={$query}{$params}";
+                $output .= "://www.bing.com/maps/?v=2&where1={$query}{$params}";
                 break;
             case 'mapquest':
-                $output = "http://mapq.st/map?q={$query}{$params}";
+                $output .= "://mapq.st/map?q={$query}{$params}";
                 break;
             case 'google':
             default:
-                $output = "http://maps.google.com/maps?q={$query}{$params}";
+                $output .= "://maps.google.com/maps?q={$query}{$params}";
                 break;
         }
 
