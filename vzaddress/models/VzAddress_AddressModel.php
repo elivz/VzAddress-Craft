@@ -79,24 +79,24 @@ class VzAddress_AddressModel extends BaseModel
 
     public function mapUrl($source = 'google', $params = array()) {
         $params = count($params) ? '&' . http_build_query($params) : '';
-        $output = isset($params['secure']) && $params['secure'] == 'yes' ? 'https' : 'http';
+        $output = '';
 
         // Create the url-encoded address
         $query = urlencode(implode(', ', $this->toArray()));
-        
+
         switch ($source) {
             case 'yahoo':
-                $output .= "://maps.yahoo.com/#q={$query}{$params}";
+                $output = "https://maps.yahoo.com/#q={$query}{$params}";
                 break;
             case 'bing':
-                $output .= "://www.bing.com/maps/?v=2&where1={$query}{$params}";
+                $output = "https://www.bing.com/maps/?v=2&where1={$query}{$params}";
                 break;
             case 'mapquest':
-                $output .= "://mapq.st/map?q={$query}{$params}";
+                $output = "https://mapq.st/map?q={$query}{$params}";
                 break;
             case 'google':
             default:
-                $output .= "://maps.google.com/maps?q={$query}{$params}";
+                $output = "https://maps.google.com/maps?q={$query}{$params}";
                 break;
         }
 
@@ -104,6 +104,8 @@ class VzAddress_AddressModel extends BaseModel
     }
 
     public function staticMapUrl($params = array()) {
+        $settings = craft()->plugins->getPlugin("vzAddress")->getSettings();
+
         $source = isset($params['source']) ? strtolower($params['source']) : 'google';
         $width  = isset($params['width']) ? strtolower($params['width']) : '400';
         $height = isset($params['height']) ? strtolower($params['height']) : '200';
@@ -114,7 +116,12 @@ class VzAddress_AddressModel extends BaseModel
         $size   = isset($params['markerSize']) ? strtolower($params['markerSize']) : false;
         $label  = isset($params['markerLabel']) ? strtoupper($params['markerLabel']) : false;
         $color  = isset($params['markerColor']) ? strtolower($params['markerColor']) : false;
-        $key    = isset($params['key']) ? $params['key'] : false;
+
+        if (isset($params['key'])) {
+            $key = $params['key'];
+        } elseif (!empty($settings['googleApiKey'])) {
+            $key = $settings['googleApiKey'];
+        }
 
         // Normalize the color parameter
         $color = str_replace('#', '0x', $color);
@@ -122,7 +129,7 @@ class VzAddress_AddressModel extends BaseModel
         // Create the url-encoded address
         $address = urlencode(implode(', ', $this->toArray()));
 
-        $output = isset($params['secure']) && $params['secure'] == 'yes' ? 'https' : 'http';
+        $output = '';
         $marker = '';
         switch ($source) {
             case 'yahoo':
@@ -136,7 +143,7 @@ class VzAddress_AddressModel extends BaseModel
                 $marker .= $size ? 'size:'.$size.'|' : '';
                 $marker .= $color ? 'color:'.$color.'|' : '';
                 $marker .= $label ? 'label:'.$label.'|' : '';
-                $output .= "://maps.googleapis.com/maps/api/staticmap?zoom={$zoom}&size={$width}x{$height}&scale={$scale}&format={$format}&maptype={$type}&markers={$marker}{$address}&sensor=false";
+                $output .= "https://maps.googleapis.com/maps/api/staticmap?zoom={$zoom}&size={$width}x{$height}&scale={$scale}&format={$format}&maptype={$type}&markers={$marker}{$address}&sensor=false";
                 $output = $key ? $output.'&key='.$key : $output;
                 break;
         }

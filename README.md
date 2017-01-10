@@ -70,7 +70,7 @@ The available parameters include:
 * `markerSize` - The relative size of the pushpin that marks the address location. One of: normal, mid, small, or tiny. (default: normal)
 * `markerColor` - The color of the pushpin. Either a named color (black, brown, green, purple, yellow, blue, gray, orange, red, or white) or a 6-digit hex-code, like "#ff0000". Three-digit color codes are not supported. (default: red)
 * `markerLabel` - Instead of the normal dot, you can specify a single letter or number to appear on the pushpin. (default: none)
-* `key` - Your [Google API key](https://developers.google.com/maps/documentation/static-maps/get-api-key). Not required, but you may be subject to usage limits if you don't have an API key. (default: none)
+* `key` - Your [Google API key](https://developers.google.com/maps/documentation/static-maps/get-api-key). Not required, but you may be subject to usage limits if you don't have an API key. You can also specify your API key globally in the plugin settings page. (default: none)
 
 ### Output an image tag containing the static Google Map
 
@@ -98,3 +98,5 @@ Please post all bugs or feature requests in [GitHub Issues](https://github.com/e
 Roadmap
 -------
 
+* Map preview in control panel
+* Geocoding to fill in missing pieces of the address

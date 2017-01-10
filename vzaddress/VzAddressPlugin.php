@@ -11,7 +11,7 @@ class VzAddressPlugin extends BasePlugin
     }
 
     public function getVersion() {
-        return '1.1.1';
+        return '1.2.0';
     }
 
     public function getSchemaVersion() {
@@ -32,6 +32,18 @@ class VzAddressPlugin extends BasePlugin
 
     public function getReleaseFeedUrl() {
         return 'https://raw.githubusercontent.com/elivz/VzAddress-Craft/master/changelog.json';
+    }
+
+    protected function defineSettings() {
+        return array(
+            'googleApiKey' => array(AttributeType::String, 'default' => ''),
+        );
+    }
+
+    public function getSettingsHtml() {
+        return craft()->templates->render('vzaddress/settings', array(
+            'settings' => $this->getSettings()
+        ));
     }
 
     public function registerImportOptionPaths()

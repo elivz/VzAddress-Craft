@@ -1,0 +1,11 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.textField({
+    first:        true,
+    label:        "Google API Key"|t,
+    instructions: 'An API key is required for any new implementation of Google Maps. You will need to <a href="https://developers.google.com/maps/documentation/javascript/get-api-key#key" target="_blank">register your app with Google</a> and paste the provided key here before any of the Google template tags will work.'|t,
+    id:           'googleApiKey',
+    name:         'googleApiKey',
+    value:        settings.googleApiKey,
+    errors:       settings.getErrors('googleApiKey')
+}) }}
