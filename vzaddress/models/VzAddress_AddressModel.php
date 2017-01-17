@@ -116,6 +116,7 @@ class VzAddress_AddressModel extends BaseModel
         $size   = isset($params['markerSize']) ? strtolower($params['markerSize']) : false;
         $label  = isset($params['markerLabel']) ? strtoupper($params['markerLabel']) : false;
         $color  = isset($params['markerColor']) ? strtolower($params['markerColor']) : false;
+        $style  = isset($params['style']) ? $this->_styleString($params['style']) : false;
 
         if (isset($params['key'])) {
             $key = $params['key'];
@@ -124,7 +125,7 @@ class VzAddress_AddressModel extends BaseModel
         }
 
         // Normalize the color parameter
-        $color = str_replace('#', '0x', $color);
+        $color = $this->_normalizeColor($color);
 
         // Create the url-encoded address
         $address = urlencode(implode(', ', $this->toArray()));
@@ -143,7 +144,7 @@ class VzAddress_AddressModel extends BaseModel
                 $marker .= $size ? 'size:'.$size.'|' : '';
                 $marker .= $color ? 'color:'.$color.'|' : '';
                 $marker .= $label ? 'label:'.$label.'|' : '';
-                $output .= "https://maps.googleapis.com/maps/api/staticmap?zoom={$zoom}&size={$width}x{$height}&scale={$scale}&format={$format}&maptype={$type}&markers={$marker}{$address}&sensor=false";
+                $output .= "https://maps.googleapis.com/maps/api/staticmap?zoom={$zoom}&size={$width}x{$height}&scale={$scale}&format={$format}&maptype={$type}&markers={$marker}{$address}&sensor=false{$style}";
                 $output = $key ? $output.'&key='.$key : $output;
                 break;
         }
@@ -168,5 +169,66 @@ class VzAddress_AddressModel extends BaseModel
     public function getCountryName() {
         $localeData = craft()->i18n->getLocaleData();
         return $localeData->getTerritory($this->country);
+    }
+
+    /**
+     * Method to normalise the given color string e.g. transform #ffffff to 0xffffff
+     *
+     * @var string $color The color string to be transformed
+     * @return string The transformed color stirng
+     */
+    private function _normalizeColor($color) {
+        return str_replace('#', '0x', $color);
+    }
+
+    /**
+     * Method to parse the given style array and return a formatted string
+     *
+     * @var array $style A multidimensional array structured according to Google's Styled Maps configuration e.g.
+     *
+     * [
+     *     {
+     *         'featureType': String
+     *         'elementType': String
+     *         'stylers': [
+     *             {
+     *                 String: String
+     *             }
+     *         ]
+     *     }
+     *     ...
+     * ]
+     *
+     * @see https://developers.google.com/maps/documentation/javascript/styling Documentation of styling Google Maps
+     *
+     * @return string A style string formatted for use with the Google Static Maps API
+     */
+    private function _styleString($style) {
+        $output = "";
+
+        foreach ($style as $elem) {
+            $declaration = array();
+
+            if (array_key_exists('featureType', $elem)) {
+                $declaration[] = "feature:{$elem['featureType']}";
+            }
+
+            if (array_key_exists('elementType', $elem)) {
+                $declaration[] = "element:{$elem['elementType']}";
+            }
+
+            foreach ($elem['stylers'] as $styler) {
+                foreach ($styler as $key => $value) {
+                    if ($key == 'color') {
+                        $value = $this->_normalizeColor($value);
+                    }
+                    $declaration[] .= "{$key}:{$value}";
+                }
+            }
+
+            $output .= '&style=' . implode($declaration, '|');
+        }
+
+        return $output;
     }
 }
