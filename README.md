@@ -57,6 +57,15 @@ The first parameter is the service to use, one of `google`, `yahoo`, `bing`, or 
         height: '200',
         type: 'satellite',
         key: '12345'
+        style: [
+            {
+                'featureType': 'road.local',
+                'elementType': 'geometry',
+                'stylers': [
+                    { 'color': '#00ff00' }
+                ]
+            }
+        ]
     } %}
     {{ entry.fieldName.staticMapUrl(mapParams) }}
 
@@ -71,6 +80,7 @@ The available parameters include:
 * `markerColor` - The color of the pushpin. Either a named color (black, brown, green, purple, yellow, blue, gray, orange, red, or white) or a 6-digit hex-code, like "#ff0000". Three-digit color codes are not supported. (default: red)
 * `markerLabel` - Instead of the normal dot, you can specify a single letter or number to appear on the pushpin. (default: none)
 * `key` - Your [Google API key](https://developers.google.com/maps/documentation/static-maps/get-api-key). Not required, but you may be subject to usage limits if you don't have an API key. You can also specify your API key globally in the plugin settings page. (default: none)
+* `style` - A [multidimensional array](https://developers.google.com/maps/documentation/javascript/styling) defining the styling you wish to be applied to the map 
 
 ### Output an image tag containing the static Google Map
 
