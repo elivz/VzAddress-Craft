@@ -116,7 +116,7 @@ class VzAddress_AddressModel extends BaseModel
         $size   = isset($params['markerSize']) ? strtolower($params['markerSize']) : false;
         $label  = isset($params['markerLabel']) ? strtoupper($params['markerLabel']) : false;
         $color  = isset($params['markerColor']) ? strtolower($params['markerColor']) : false;
-        $style  = isset($params['style']) ? $this->styleString($params['style']) : false;
+        $style  = isset($params['style']) ? $this->_styleString($params['style']) : false;
 
         if (isset($params['key'])) {
             $key = $params['key'];
@@ -125,7 +125,7 @@ class VzAddress_AddressModel extends BaseModel
         }
 
         // Normalize the color parameter
-        $color = $this->normalizeColor($color);
+        $color = $this->_normalizeColor($color);
 
         // Create the url-encoded address
         $address = urlencode(implode(', ', $this->toArray()));
@@ -152,13 +152,32 @@ class VzAddress_AddressModel extends BaseModel
         return $output;
     }
 
+    public function staticMap($params = array()) {
+        $width  = isset($params['width']) ? strtolower($params['width']) : '400';
+        $height = isset($params['height']) ? strtolower($params['height']) : '200';
+        $map_url = $this->staticMapUrl($params);
+        $address = htmlspecialchars($this->text());
+
+        $output = '<img src="'.$map_url.'" alt="'.$address.'" width="'.$width.'" height="'.$height.'">';
+        return TemplateHelper::getRaw($output);
+    }
+
+    /**
+     * Virtual Attributes
+     */
+
+    public function getCountryName() {
+        $localeData = craft()->i18n->getLocaleData();
+        return $localeData->getTerritory($this->country);
+    }
+
     /**
      * Method to normalise the given color string e.g. transform #ffffff to 0xffffff
      *
      * @var string $color The color string to be transformed
      * @return string The transformed color stirng
      */
-    public function normalizeColor($color) {
+    private function _normalizeColor($color) {
         return str_replace('#', '0x', $color);
     }
 
@@ -179,32 +198,29 @@ class VzAddress_AddressModel extends BaseModel
      *     }
      *     ...
      * ]
-
+     *
      * @see https://developers.google.com/maps/documentation/javascript/styling Documentation of styling Google Maps
      *
      * @return string A style string formatted for use with the Google Static Maps API
-
      */
-    public function styleString($style) {
-
+    private function _styleString($style) {
         $output = "";
 
-        foreach($style as $elem) {
-
+        foreach ($style as $elem) {
             $declaration = array();
 
-            if(array_key_exists('featureType', $elem)) {
+            if (array_key_exists('featureType', $elem)) {
                 $declaration[] = "feature:{$elem['featureType']}";
             }
 
-            if(array_key_exists('elementType', $elem)) {
+            if (array_key_exists('elementType', $elem)) {
                 $declaration[] = "element:{$elem['elementType']}";
             }
 
-            foreach($elem['stylers'] as $styler) {
-                foreach($styler as $key => $value) {
-                    if($key == 'color') {
-                        $value = $this->normalizeColor($value);
+            foreach ($elem['stylers'] as $styler) {
+                foreach ($styler as $key => $value) {
+                    if ($key == 'color') {
+                        $value = $this->_normalizeColor($value);
                     }
                     $declaration[] .= "{$key}:{$value}";
                 }
@@ -214,25 +230,5 @@ class VzAddress_AddressModel extends BaseModel
         }
 
         return $output;
-
-    }
-
-    public function staticMap($params = array()) {
-        $width  = isset($params['width']) ? strtolower($params['width']) : '400';
-        $height = isset($params['height']) ? strtolower($params['height']) : '200';
-        $map_url = $this->staticMapUrl($params);
-        $address = htmlspecialchars($this->text());
-
-        $output = '<img src="'.$map_url.'" alt="'.$address.'" width="'.$width.'" height="'.$height.'">';
-        return TemplateHelper::getRaw($output);
-    }
-
-    /**
-     * Virtual Attributes
-     */
-
-    public function getCountryName() {
-        $localeData = craft()->i18n->getLocaleData();
-        return $localeData->getTerritory($this->country);
     }
 }
