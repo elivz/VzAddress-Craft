@@ -1,0 +1,41 @@
+<div id="{{ config.id }}" class="google-map"></div>
+
+{% set mapJs %}
+
+$(document).ready(function() {
+
+    var latlng = {lat: {{ config.lat }}, lng: {{ config.lng }}};
+
+    var map = new google.maps.Map(document.getElementById('{{ config.id }}'), {
+
+        {% for key, val in options %}
+            {% if key == 'styles' %}
+                {{ key }}: {{ val | json_encode() | raw }},
+            {% else %}
+                {{ key }}: {{ val }},
+            {% endif %}
+        {% endfor %}
+
+        center: latlng
+    });    
+
+    {% if icon.url is defined %}
+        var icon = {
+            url: "{{ icon.url }}",
+            {% if icon.width is defined and icon.height is defined %}scaledSize: new google.maps.Size({{icon.width}}, {{icon.height}}),{% endif %}
+            {% if icon.origin.x is defined and icon.origin.y is defined %}origin: new google.maps.Point({{icon.origin.x}},{{icon.origin.y}}),{% endif %}
+            {% if icon.anchor.x is defined and icon.anchor.y is defined %}anchor: new google.maps.Point({{icon.anchor.x}}, {{icon.anchor.y}}){% endif %}
+        };
+    {% endif %}
+
+    var marker = new google.maps.Marker({
+        position: latlng,
+        map: map
+        {% if icon %}, icon: icon{% endif %}
+    });
+
+});
+
+{% endset %}
+
+{% includeJs mapJs %}
