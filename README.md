@@ -93,6 +93,59 @@ The available parameters include:
 
 Accepts the same parameters as `staticMapUrl`.
 
+### Output a dynamic Google Map
+
+    {% set options = {
+        clickableIcons: 'false',
+        disableDefaultUI: 'true',
+        disableDoubleClickZoom: 'false',
+        draggable: 'true',
+        draggableCursor: 'null',
+        draggingCursor: 'null',
+        fullscreenControl: 'true',
+        gestureHandling: 'null',
+        heading: '0',
+        keyboardShortcuts: 'true',
+        mapTypeControl: 'false',
+        maxZoom: 'null',
+        minZoom: 'null',
+        noClear: 'false',
+        rotateControl: 'false',
+        scaleControl: 'false',
+        scrollwheel: 'true',
+        streetViewControl: 'false',
+        tilt: '0',
+        zoom: '16',
+        zoomControl: 'false',
+        styles: [
+            {
+                'featureType': 'road.local',
+                'elementType': 'geometry',
+                'stylers': [
+                    { 'color': '#00ff00' }
+                ]
+            }
+        ]
+    } %}
+
+    {% set icon = {
+        url: "path/to/icon.png",
+        width: 50,
+        height: 50,
+        origin: {
+            x: 0,
+            y: 0
+        },
+        anchor: {
+            x: 0,
+            y: 0
+        }
+    } %}
+
+    {{ entry.fieldName.dynamicMap(options, icon) }}
+
+* The options array mirrors the [MapOptions](https://developers.google.com/maps/documentation/javascript/3.exp/reference#MapOptions) configuration from Google Maps Javascript API. All available options are shown in the example above.
+* The icon array is used for configuring the look of the marker icon. All available options are shown in the example above.
 
 Installation
 ------------
