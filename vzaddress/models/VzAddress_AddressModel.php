@@ -117,6 +117,7 @@ class VzAddress_AddressModel extends BaseModel
         $label  = isset($params['markerLabel']) ? strtoupper($params['markerLabel']) : false;
         $color  = isset($params['markerColor']) ? strtolower($params['markerColor']) : false;
         $style  = isset($params['styles']) ? $this->_styleString($params['styles']) : false;
+        $style  = isset($params['style'] && !$style ? $this->_styleString($params['style']) : false;
 
         if (isset($params['key'])) {
             $key = $params['key'];
@@ -173,35 +174,6 @@ class VzAddress_AddressModel extends BaseModel
      * @return \Twig_Markup The markup string wrapped in a Twig_Markup object
      */
     public function dynamicMap($params = array(), $icon = array()) {
-
-        // these mirror MapOptions object - https://developers.google.com/maps/documentation/javascript/3.exp/reference#MapOptions
-        $defaults = array(
-            'clickableIcons'            => 'false',
-            'disableDefaultUI'          => 'true',
-            'disableDoubleClickZoom'    => 'false',
-            'draggable'                 => 'true',
-            'draggableCursor'           => 'null',
-            'draggingCursor'            => 'null',
-            'fullscreenControl'         => 'true',
-            'gestureHandling'           => 'null',
-            'heading'                   => '0',
-            'keyboardShortcuts'         => 'true',
-            'mapTypeControl'            => 'false',
-            'maxZoom'                   => 'null',
-            'minZoom'                   => 'null',
-            'noClear'                   => 'false',
-            'rotateControl'             => 'false',
-            'scaleControl'              => 'false',
-            'scrollwheel'               => 'true',
-            'streetViewControl'         => 'false',
-            'tilt'                      => '0',
-            'zoom'                      => '16',
-            'zoomControl'               => 'false',
-        );
-
-        // merge the given parameters with our defaults to create the options array
-        $options = array_merge($defaults, $params);
-
         // fetch our plugin settings so we can use the api key
         $settings = craft()->plugins->getPlugin("vzAddress")->getSettings();
 
@@ -214,31 +186,50 @@ class VzAddress_AddressModel extends BaseModel
         unset($address['name']);
         $coords = $this->_geocodeAddress(implode($address, ' '));
 
-        // assemble the config array
-        $config = array(
-            'id' => uniqid('map-'), // a unique id for the map
-            'lat' => $coords['lat'],
-            'lng' => $coords['lng']
+        $width  = isset($params['width']) ? strtolower($params['width']) : '400';
+        unset($params['width']);
+        $height = isset($params['height']) ? strtolower($params['height']) : '200';
+        unset($params['height']);
+
+        // these mirror MapOptions object - https://developers.google.com/maps/documentation/javascript/3.exp/reference#MapOptions
+        $defaults = array(
+            'zoom' => 14,
+            'center' => $coords,
         );
 
-        // here we have to do a little dance with craft's template paths...
-        $oldPath = craft()->path->getTemplatesPath();
-        $newPath = craft()->path->getPluginsPath() . 'vzaddress/templates';
-        craft()->path->setTemplatesPath($newPath);
+        // merge the given parameters with our defaults to create the options array
+        $options = array_merge($defaults, $params);
+
+        // assemble the config array
+        $config = array(
+            'id'     => uniqid('map-'),
+            'width'  => $width,
+            'height' => $height,
+        );
+
+        $newTemplatePath = craft()->path->getPluginsPath() . 'vzaddress/templates/_frontend/';
+
+        $originalTemplatesPath = method_exists(craft()->templates, 'getTemplatesPath') ?
+            craft()->templates->getTemplatesPath() :
+            craft()->path->getTemplatesPath();
+
+        method_exists(craft()->templates, 'setTemplatesPath') ?
+            craft()->templates->setTemplatesPath($newTemplatePath) :
+            craft()->path->setTemplatesPath($newTemplatePath);
 
         // get the rendered template as a string
-        $output = craft()->templates->render('maps/googlemap_dynamic', array(
+        $output = craft()->templates->render('googlemap_dynamic', array(
             'options'   => $options,
             'icon'      => $icon,
-            'config'    => $config
+            'config'    => $config,
         ));
 
         // make sure we set craft's template paths back to what they were
-        craft()->path->setTemplatesPath($oldPath);
+        method_exists(craft()->templates, 'setTemplatesPath') ?
+            craft()->templates->setTemplatesPath($originalTemplatesPath) :
+            craft()->path->setTemplatesPath($originalTemplatesPath);
 
-        // fin
         return TemplateHelper::getRaw($output);
-
     }
 
     /**
@@ -257,42 +248,29 @@ class VzAddress_AddressModel extends BaseModel
      * @return array The lat/lng pair in an associative array
      */
     private function _geocodeAddress($address) {
-
-        // url encode the address
         $address = urlencode($address);
-
-        // google map geocode api url
         $url = "http://maps.google.com/maps/api/geocode/json?address={$address}";
 
         // get the json response
-        $resp_json = file_get_contents($url);
+        $response = json_decode(file_get_contents($url), true);
 
-        // decode the json
-        $resp = json_decode($resp_json, true);
-
-        // response status will be 'OK', if able to geocode given address 
-        if($resp['status']=='OK'){
-
-            // get the important data
-            $lat = $resp['results'][0]['geometry']['location']['lat'];
-            $lng = $resp['results'][0]['geometry']['location']['lng'];
+        // Response status will be 'OK' if able to geocode given address
+        if ($response['status'] == 'OK') {
+            $lat = $response['results'][0]['geometry']['location']['lat'];
+            $lng = $response['results'][0]['geometry']['location']['lng'];
 
             // verify if data is complete
-            if($lat && $lng){
-
+            if ($lat && $lng) {
                 return array(
                     'lat' => $lat,
                     'lng' => $lng
                 );
-
             } else {
                 return false;
             }
-
         } else {
             return false;
         }
-
     }
 
     /**

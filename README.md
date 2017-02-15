@@ -96,6 +96,8 @@ Accepts the same parameters as `staticMapUrl`.
 ### Output a dynamic Google Map
 
     {% set options = {
+        width: 400,
+        height: 200,
         clickableIcons: 'false',
         disableDefaultUI: 'true',
         disableDoubleClickZoom: 'false',
@@ -144,7 +146,7 @@ Accepts the same parameters as `staticMapUrl`.
 
     {{ entry.fieldName.dynamicMap(options, icon) }}
 
-* The options array mirrors the [MapOptions](https://developers.google.com/maps/documentation/javascript/3.exp/reference#MapOptions) configuration from Google Maps Javascript API. All available options are shown in the example above.
+* The options array mirrors the [MapOptions](https://developers.google.com/maps/documentation/javascript/3.exp/reference#MapOptions) configuration from Google Maps Javascript API. All available options are shown in the example above. Only the `width`, `height`, & `zoom` options are set by default.
 * The icon array is used for configuring the look of the marker icon. All available options are shown in the example above.
 
 Installation
