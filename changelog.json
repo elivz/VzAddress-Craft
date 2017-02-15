@@ -5,6 +5,7 @@
         "date": "2017-02-14T23:00:00+00:00",
         "notes": [
             "[Added] New `dynamicMap` tag outputs an embedded Google map to the page.",
+            "[Added] Support for the [FeedMe](https://github.com/engram-design/FeedMe) plugin.",
             "[Improved] The `style` parameter on all map tags has been renamed to `styles` to match Google Maps API."
         ]
     },

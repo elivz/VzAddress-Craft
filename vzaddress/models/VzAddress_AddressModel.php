@@ -154,8 +154,8 @@ class VzAddress_AddressModel extends BaseModel
     }
 
     public function staticMap($params = array()) {
-        $width  = isset($params['width']) ? strtolower($params['width']) : '400';
-        $height = isset($params['height']) ? strtolower($params['height']) : '200';
+        $width   = isset($params['width']) ? strtolower($params['width']) : '400';
+        $height  = isset($params['height']) ? strtolower($params['height']) : '200';
         $map_url = $this->staticMapUrl($params);
         $address = htmlspecialchars($this->text());
 
@@ -193,7 +193,7 @@ class VzAddress_AddressModel extends BaseModel
 
         // these mirror MapOptions object - https://developers.google.com/maps/documentation/javascript/3.exp/reference#MapOptions
         $defaults = array(
-            'zoom' => 14,
+            'zoom'   => 14,
             'center' => $coords,
         );
 
@@ -219,9 +219,9 @@ class VzAddress_AddressModel extends BaseModel
 
         // get the rendered template as a string
         $output = craft()->templates->render('googlemap_dynamic', array(
-            'options'   => $options,
-            'icon'      => $icon,
-            'config'    => $config,
+            'options' => $options,
+            'icon'    => $icon,
+            'config'  => $config,
         ));
 
         // make sure we set craft's template paths back to what they were
