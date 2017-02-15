@@ -57,7 +57,7 @@ The first parameter is the service to use, one of `google`, `yahoo`, `bing`, or 
         height: '200',
         type: 'satellite',
         key: '12345'
-        style: [
+        styles: [
             {
                 'featureType': 'road.local',
                 'elementType': 'geometry',
@@ -80,7 +80,7 @@ The available parameters include:
 * `markerColor` - The color of the pushpin. Either a named color (black, brown, green, purple, yellow, blue, gray, orange, red, or white) or a 6-digit hex-code, like "#ff0000". Three-digit color codes are not supported. (default: red)
 * `markerLabel` - Instead of the normal dot, you can specify a single letter or number to appear on the pushpin. (default: none)
 * `key` - Your [Google API key](https://developers.google.com/maps/documentation/static-maps/get-api-key). Not required, but you may be subject to usage limits if you don't have an API key. You can also specify your API key globally in the plugin settings page. (default: none)
-* `style` - A [multidimensional array](https://developers.google.com/maps/documentation/javascript/styling) defining the styling you wish to be applied to the map 
+* `styles` - A [multidimensional array](https://developers.google.com/maps/documentation/javascript/styling) defining the styling you wish to be applied to the map 
 
 ### Output an image tag containing the static Google Map
 
@@ -93,6 +93,61 @@ The available parameters include:
 
 Accepts the same parameters as `staticMapUrl`.
 
+### Output a dynamic Google Map
+
+    {% set options = {
+        width: 400,
+        height: 200,
+        clickableIcons: 'false',
+        disableDefaultUI: 'true',
+        disableDoubleClickZoom: 'false',
+        draggable: 'true',
+        draggableCursor: 'null',
+        draggingCursor: 'null',
+        fullscreenControl: 'true',
+        gestureHandling: 'null',
+        heading: '0',
+        keyboardShortcuts: 'true',
+        mapTypeControl: 'false',
+        maxZoom: 'null',
+        minZoom: 'null',
+        noClear: 'false',
+        rotateControl: 'false',
+        scaleControl: 'false',
+        scrollwheel: 'true',
+        streetViewControl: 'false',
+        tilt: '0',
+        zoom: '16',
+        zoomControl: 'false',
+        styles: [
+            {
+                'featureType': 'road.local',
+                'elementType': 'geometry',
+                'stylers': [
+                    { 'color': '#00ff00' }
+                ]
+            }
+        ]
+    } %}
+
+    {% set icon = {
+        url: "path/to/icon.png",
+        width: 50,
+        height: 50,
+        origin: {
+            x: 0,
+            y: 0
+        },
+        anchor: {
+            x: 0,
+            y: 0
+        }
+    } %}
+
+    {{ entry.fieldName.dynamicMap(options, icon) }}
+
+* The options array mirrors the [MapOptions](https://developers.google.com/maps/documentation/javascript/3.exp/reference#MapOptions) configuration from Google Maps Javascript API. All available options are shown in the example above. Only the `width`, `height`, & `zoom` options are set by default.
+* The icon array is used for configuring the look of the marker icon. All available options are shown in the example above.
 
 Installation
 ------------

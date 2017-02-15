@@ -116,7 +116,8 @@ class VzAddress_AddressModel extends BaseModel
         $size   = isset($params['markerSize']) ? strtolower($params['markerSize']) : false;
         $label  = isset($params['markerLabel']) ? strtoupper($params['markerLabel']) : false;
         $color  = isset($params['markerColor']) ? strtolower($params['markerColor']) : false;
-        $style  = isset($params['style']) ? $this->_styleString($params['style']) : false;
+        $style  = isset($params['styles']) ? $this->_styleString($params['styles']) : false;
+        $style  = isset($params['style'] && !$style ? $this->_styleString($params['style']) : false;
 
         if (isset($params['key'])) {
             $key = $params['key'];
@@ -163,12 +164,113 @@ class VzAddress_AddressModel extends BaseModel
     }
 
     /**
+     * Generate a dynamic map using the Google Maps Javascript API
+     *
+     * @var array $params An array of MapOptions for the Google Map object
+     * @var array $icon An array of configuration options for the Marker icon
+     *
+     * @see https://developers.google.com/maps/documentation/javascript/3.exp/reference#MapOptions
+     *
+     * @return \Twig_Markup The markup string wrapped in a Twig_Markup object
+     */
+    public function dynamicMap($params = array(), $icon = array()) {
+        // fetch our plugin settings so we can use the api key
+        $settings = craft()->plugins->getPlugin("vzAddress")->getSettings();
+
+        // include the javascript api from google's cdn using our api key
+        craft()->templates->includeJsFile("https://maps.googleapis.com/maps/api/js?key={$settings->googleApiKey}");
+
+        // geocode our address into coordinates
+        $address = $this->toArray();
+        // remove the name from the address as it throws the geocoder off
+        unset($address['name']);
+        $coords = $this->_geocodeAddress(implode($address, ' '));
+
+        $width  = isset($params['width']) ? strtolower($params['width']) : '400';
+        unset($params['width']);
+        $height = isset($params['height']) ? strtolower($params['height']) : '200';
+        unset($params['height']);
+
+        // these mirror MapOptions object - https://developers.google.com/maps/documentation/javascript/3.exp/reference#MapOptions
+        $defaults = array(
+            'zoom' => 14,
+            'center' => $coords,
+        );
+
+        // merge the given parameters with our defaults to create the options array
+        $options = array_merge($defaults, $params);
+
+        // assemble the config array
+        $config = array(
+            'id'     => uniqid('map-'),
+            'width'  => $width,
+            'height' => $height,
+        );
+
+        $newTemplatePath = craft()->path->getPluginsPath() . 'vzaddress/templates/_frontend/';
+
+        $originalTemplatesPath = method_exists(craft()->templates, 'getTemplatesPath') ?
+            craft()->templates->getTemplatesPath() :
+            craft()->path->getTemplatesPath();
+
+        method_exists(craft()->templates, 'setTemplatesPath') ?
+            craft()->templates->setTemplatesPath($newTemplatePath) :
+            craft()->path->setTemplatesPath($newTemplatePath);
+
+        // get the rendered template as a string
+        $output = craft()->templates->render('googlemap_dynamic', array(
+            'options'   => $options,
+            'icon'      => $icon,
+            'config'    => $config,
+        ));
+
+        // make sure we set craft's template paths back to what they were
+        method_exists(craft()->templates, 'setTemplatesPath') ?
+            craft()->templates->setTemplatesPath($originalTemplatesPath) :
+            craft()->path->setTemplatesPath($originalTemplatesPath);
+
+        return TemplateHelper::getRaw($output);
+    }
+
+    /**
      * Virtual Attributes
      */
 
     public function getCountryName() {
         $localeData = craft()->i18n->getLocaleData();
         return $localeData->getTerritory($this->country);
+    }
+
+    /**
+     * Method to geocode the given address string into a lat/lng coordinate pair
+     *
+     * @var string $address The address string
+     * @return array The lat/lng pair in an associative array
+     */
+    private function _geocodeAddress($address) {
+        $address = urlencode($address);
+        $url = "http://maps.google.com/maps/api/geocode/json?address={$address}";
+
+        // get the json response
+        $response = json_decode(file_get_contents($url), true);
+
+        // Response status will be 'OK' if able to geocode given address
+        if ($response['status'] == 'OK') {
+            $lat = $response['results'][0]['geometry']['location']['lat'];
+            $lng = $response['results'][0]['geometry']['location']['lng'];
+
+            // verify if data is complete
+            if ($lat && $lng) {
+                return array(
+                    'lat' => $lat,
+                    'lng' => $lng
+                );
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
