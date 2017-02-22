@@ -118,6 +118,7 @@ class VzAddress_AddressModel extends BaseModel
         $color  = isset($params['markerColor']) ? strtolower($params['markerColor']) : false;
         $style  = isset($params['styles']) ? $this->_styleString($params['styles']) : false;
         $style  = (isset($params['style']) && !$style) ? $this->_styleString($params['style']) : false;
+        $key    = false;
 
         if (isset($params['key'])) {
             $key = $params['key'];
@@ -176,9 +177,14 @@ class VzAddress_AddressModel extends BaseModel
     public function dynamicMap($params = array(), $icon = array()) {
         // fetch our plugin settings so we can use the api key
         $settings = craft()->plugins->getPlugin("vzAddress")->getSettings();
+        $key = $settings->googleApiKey;
+
+        if (empty($key)) {
+            return 'A Google API key is required.';
+        }
 
         // include the javascript api from google's cdn using our api key
-        craft()->templates->includeJsFile("https://maps.googleapis.com/maps/api/js?key={$settings->googleApiKey}");
+        craft()->templates->includeJsFile("https://maps.googleapis.com/maps/api/js?key={$key}");
 
         // geocode our address into coordinates
         $address = $this->toArray();

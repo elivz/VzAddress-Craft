@@ -1,5 +1,13 @@
 [
     {
+        "version": "1.4.1",
+        "downloadUrl": "https://github.com/elivz/VzAddress-Craft/archive/1.4.0.zip",
+        "date": "2017-02-14==21T20:00:00+00:00",
+        "notes": [
+            "[Improved] Handle missing Google API key more gracefully."
+        ]
+    },
+    {
         "version": "1.4.0",
         "downloadUrl": "https://github.com/elivz/VzAddress-Craft/archive/1.4.0.zip",
         "date": "2017-02-14T23:00:00+00:00",
