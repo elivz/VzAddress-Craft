@@ -1,5 +1,13 @@
 [
     {
+        "version": "1.4.2",
+        "downloadUrl": "https://github.com/elivz/VzAddress-Craft/archive/1.4.2.zip",
+        "date": "2017-02-28T11:00:00+00:00",
+        "notes": [
+            "[Improved] Accept either `style` or `styles` attributes for Google Maps styling."
+        ]
+    },
+    {
         "version": "1.4.1",
         "downloadUrl": "https://github.com/elivz/VzAddress-Craft/archive/1.4.1.zip",
         "date": "2017-02-21T20:00:00+00:00",

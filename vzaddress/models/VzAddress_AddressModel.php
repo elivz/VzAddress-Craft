@@ -117,7 +117,9 @@ class VzAddress_AddressModel extends BaseModel
         $label  = isset($params['markerLabel']) ? strtoupper($params['markerLabel']) : false;
         $color  = isset($params['markerColor']) ? strtolower($params['markerColor']) : false;
         $style  = isset($params['styles']) ? $this->_styleString($params['styles']) : false;
-        $style  = (isset($params['style']) && !$style) ? $this->_styleString($params['style']) : false;
+        if (!$style && isset($params['style'])) {
+            $style  = $this->_styleString($params['style']);
+        }
         $key    = false;
 
         if (isset($params['key'])) {
