@@ -1,5 +1,13 @@
 [
     {
+        "version": "1.5.0",
+        "downloadUrl": "https://github.com/elivz/VzAddress-Craft/archive/1.5.0.zip",
+        "date": "2017-06-14T21:30:00+00:00",
+        "notes": [
+            "[Added] `craft.vzAddress.countries` variable containing an array of all the countries in the world."
+        ]
+    },
+    {
         "version": "1.4.2",
         "downloadUrl": "https://github.com/elivz/VzAddress-Craft/archive/1.4.2.zip",
         "date": "2017-02-28T11:00:00+00:00",

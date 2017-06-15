@@ -149,6 +149,16 @@ Accepts the same parameters as `staticMapUrl`.
 * The options array mirrors the [MapOptions](https://developers.google.com/maps/documentation/javascript/3.exp/reference#MapOptions) configuration from Google Maps Javascript API. All available options are shown in the example above. Only the `width`, `height`, & `zoom` options are set by default.
 * The icon array is used for configuring the look of the marker icon. All available options are shown in the example above.
 
+### Bonus: Output a list of all countries
+
+VZ Address makes available an array of all countries indexed by their country code as `craft.vzAddress.countries`. You can use this to generate your frontend entry form, or wherever you may need a list of all the countries in the world.
+
+    <select name="country">
+        {% for countryCode, countryName in craft.vzAddress.countries %}
+            <option value="{{ countryCode }}">{{ countryName }}</option>
+        {% endfor %}
+    </select>
+
 Installation
 ------------
 

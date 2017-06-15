@@ -11,7 +11,7 @@ class VzAddressPlugin extends BasePlugin
     }
 
     public function getVersion() {
-        return '1.4.2';
+        return '1.5.0';
     }
 
     public function getSchemaVersion() {
