@@ -177,9 +177,13 @@ class VzAddress_AddressModel extends BaseModel
      * @return \Twig_Markup The markup string wrapped in a Twig_Markup object
      */
     public function dynamicMap($params = array(), $icon = array()) {
-        // fetch our plugin settings so we can use the api key
-        $settings = craft()->plugins->getPlugin("vzAddress")->getSettings();
-        $key = $settings->googleApiKey;
+        if (isset($params['key'])) {
+            $key = $params['key'];
+        } elseif (!empty($settings['googleApiKey'])) {
+            // fetch our plugin settings so we can use the api key
+            $settings = craft()->plugins->getPlugin("vzAddress")->getSettings();
+            $key = $settings['googleApiKey'];
+        }
 
         if (empty($key)) {
             return 'A Google API key is required.';
@@ -192,7 +196,7 @@ class VzAddress_AddressModel extends BaseModel
         $address = $this->toArray();
         // remove the name from the address as it throws the geocoder off
         unset($address['name']);
-        $coords = $this->_geocodeAddress(implode($address, ' '));
+        $coords = $this->_geocodeAddress(implode($address, ' '), $key);
 
         $width  = isset($params['width']) ? strtolower($params['width']) : '400';
         unset($params['width']);
@@ -255,9 +259,9 @@ class VzAddress_AddressModel extends BaseModel
      * @var string $address The address string
      * @return array The lat/lng pair in an associative array
      */
-    private function _geocodeAddress($address) {
+    private function _geocodeAddress($address, $key) {
         $address = urlencode($address);
-        $url = "http://maps.google.com/maps/api/geocode/json?address={$address}";
+        $url = "http://maps.google.com/maps/api/geocode/json?address={$address}&key={$key}";
 
         // get the json response
         $response = json_decode(file_get_contents($url), true);
