@@ -179,7 +179,7 @@ class VzAddress_AddressModel extends BaseModel
     public function dynamicMap($params = array(), $icon = array()) {
         if (isset($params['key'])) {
             $key = $params['key'];
-        } elseif (!empty($settings['googleApiKey'])) {
+        } else {
             // fetch our plugin settings so we can use the api key
             $settings = craft()->plugins->getPlugin("vzAddress")->getSettings();
             $key = $settings['googleApiKey'];
