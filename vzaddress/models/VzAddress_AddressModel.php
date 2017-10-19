@@ -261,7 +261,7 @@ class VzAddress_AddressModel extends BaseModel
      */
     private function _geocodeAddress($address, $key) {
         $address = urlencode($address);
-        $url = "http://maps.google.com/maps/api/geocode/json?address={$address}&key={$key}";
+        $url = "https://maps.google.com/maps/api/geocode/json?address={$address}&key={$key}";
 
         // get the json response
         $response = json_decode(file_get_contents($url), true);
