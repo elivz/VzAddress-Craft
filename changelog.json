@@ -1,5 +1,14 @@
 [
     {
+        "version": "1.5.1",
+        "downloadUrl": "https://github.com/elivz/VzAddress-Craft/archive/1.5.1.zip",
+        "date": "2017-10-31T16:30:00+00:00",
+        "notes": [
+            "[Fixed] Failure to use Google API key from settings when generating a dymanic Google map.",
+            "[Fixed] Use secure Google API url for geocoding addresses."
+        ]
+    },
+    {
         "version": "1.5.0",
         "downloadUrl": "https://github.com/elivz/VzAddress-Craft/archive/1.5.0.zip",
         "date": "2017-06-14T21:30:00+00:00",
