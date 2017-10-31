@@ -12,6 +12,8 @@ class VzAddress_AddressModel extends BaseModel
             'region'     => AttributeType::String,
             'postalCode' => AttributeType::String,
             'country'    => AttributeType::String,
+            'latitude'   => AttributeType::String,
+            'longitude'  => AttributeType::String,
         );
     }
 

@@ -73,5 +73,29 @@
                 options: countries
             }) }}
         </div>
+
+        <div class="vzaddress-note">
+            <small>Latitude and Longitude Will auto-populate when blank</small>
+        </div>
+
+        <div class="vzaddress-field vzaddress-latitude">
+            <label for="{{ id~'-latitude' }}">{{ 'Postal Code'|t }}</label>
+            {{ forms.text({
+                id: id~'-latitude',
+                name: name~'[latitude]',
+                value: values.latitude,
+                placeholder: 'Latitude'|t
+            }) }}
+        </div>
+
+        <div class="vzaddress-field vzaddress-longitude">
+            <label for="{{ id~'-longitude' }}">{{ 'Postal Code'|t }}</label>
+            {{ forms.text({
+                id: id~'-longitude',
+                name: name~'[longitude]',
+                value: values.longitude,
+                placeholder: 'Longitude'|t
+            }) }}
+        </div>
     </div>
 </div>
