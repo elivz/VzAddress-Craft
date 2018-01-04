@@ -47,8 +47,8 @@
 
 .vzaddress-country {
     clear: both;
-    padding-bottom: 0;
 }
+
 .wide .vzaddress-country {
     float: right;
     clear: none;
@@ -63,3 +63,25 @@
     width: 100%;
 }
 
+.vzaddress-lat,
+.vzaddress-lng {
+  float: left;
+  width: 40%;
+  padding-left: 0.75em;
+}
+
+.vzaddress-geocode {
+  clear: both;
+  width: 15%;
+  float: left;
+}
+
+.geocodebtn {
+  width: 100%;
+}
+
+.spinner-container {
+  width: 5%;
+  float: right;
+  text-align: right;
+}

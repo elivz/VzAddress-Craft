@@ -73,5 +73,36 @@
                 options: countries
             }) }}
         </div>
+
+        <div class="vzaddress-field vzaddress-geocode">
+            <div class="btn geocodebtn" id="geocodeAddress">
+              Get Lat / Lng
+            </div>
+        </div>
+
+        <div class="vzaddress-field vzaddress-lat">
+            <label for="{{ id~'-lat' }}">{{ 'lat'|t }}</label>
+            {{ forms.text({
+                id: id~'-lat',
+                name: name~'[lat]',
+                value: values.lat,
+                placeholder: 'Latitude'
+            }) }}
+        </div>
+
+        <div class="vzaddress-field vzaddress-lng">
+            <label for="{{ id~'-lng' }}">{{ 'lng'|t }}</label>
+            {{ forms.text({
+                id: id~'-lng',
+                name: name~'[lng]',
+                value: values.lng,
+                placeholder: 'Longitude'
+            }) }}
+        </div>
+
+        <div class="spinner-container">
+          <div class="spinner hidden"></div>
+        </div>
+
     </div>
 </div>

@@ -1,0 +1,15 @@
+{
+    "name": "elivz/vzaddress",
+    "description": "Address fieldtype for the Craft CMS",
+    "type": "craft-plugin",
+    "require": {
+        "composer/installers": "^1.2"
+    },
+    "authors": [
+        {
+            "name": "Eli Van Zoeren",
+            "email": "eli@elivz.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}
