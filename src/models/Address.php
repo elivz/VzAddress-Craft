@@ -16,6 +16,7 @@ use Craft;
 use craft\base\Model;
 use craft\helpers\Localization;
 use craft\helpers\Template;
+use craft\web\View;
 
 /**
  * Address Model
@@ -139,6 +140,22 @@ class Address extends Model
     }
 
     /**
+     * Returns an array of the address components
+     *
+     * @param array $fields the fields being requested
+     * @param array $expand the additional fields being requested for exporting.
+     * @param bool $recursive whether to recursively return array representation of embedded objects.
+     * @return array the array representation of the object
+     */
+    public function toArray(array $fields = [], array $expand = [], $recursive = true)
+    {
+        $address = parent::toArray($fields, $expand, $recursive);
+        $address = array_filter($address);
+        $address['country'] = $this->countryName;
+        return $address;
+    }
+
+    /**
      * Returns a plain-text representation of the address
      *
      * @param  boolean $formatted Whether line-breaks should be included
@@ -147,9 +164,14 @@ class Address extends Model
     public function text(bool $formatted = false): string
     {
         if ($formatted) {
-            return \Craft::$app->controller->renderTemplate('vzaddress/templates/_frontend/text', [
+            $oldMode = \Craft::$app->view->getTemplateMode();
+            \Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+            $html = \Craft::$app->view->renderTemplate('vzaddress/_frontend/text', [
                 'address' => $this,
             ]);
+            \Craft::$app->view->setTemplateMode($oldMode);
+
+            return $html;
         }
 
         return implode(', ', $this->toArray());
@@ -164,14 +186,17 @@ class Address extends Model
     public function html(string $format = 'plain'): \Twig_Markup
     {
         if (in_array($format, ['schema', 'microformat', 'rdfa'], true)) {
-            $output = \Craft::$app->controller->renderTemplate('vzaddress/templates/_frontend/' . $format, [
+            $oldMode = \Craft::$app->view->getTemplateMode();
+            \Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+            $html = \Craft::$app->view->renderTemplate("vzaddress/_frontend/$format", [
                 'address' => $this,
             ]);
+            \Craft::$app->view->setTemplateMode($oldMode);
         } else {
-            $output = str_replace("\n", '<br>', $this->text(true));
+            $html = str_replace("\n", '<br>', $this->text(true));
         }
 
-        return Template::raw($output);
+        return Template::raw($html);
     }
 
     /**
@@ -304,6 +329,10 @@ class Address extends Model
                 throw new \yii\base\UserException('You must specify an API Key to use Google Maps.');
             }
 
+            // Combine width & height parameters
+            $params['size'] = $params['width'].'x'.$params['height'];
+            unset($params['width'], $params['height']);
+
             // Marker options
             $params['markers'] = '';
             $params['markers'] .= !empty($params['markerSize']) ? 'size:'.strtolower($params['markerSize']).'|' : false;
@@ -336,6 +365,7 @@ class Address extends Model
     {
         $width = !empty($params['width']) ? (int)$params['width'] : 400;
         $height = !empty($params['height']) ? (int)$params['height'] : 200;
+        $mapUrl = $this->staticMapUrl($params);
         $alt = htmlspecialchars($this->text());
 
         $output = '<img src="'.$mapUrl.'" alt="'.$alt.'" width="'.$width.'" height="'.$height.'">';
@@ -383,14 +413,17 @@ class Address extends Model
         ];
 
         // Get the rendered template as a string
-        $output = \Craft::$app->controller->renderTemplate('vzaddress/templates/_frontend/googlemap_dynamic', [
+        $oldMode = \Craft::$app->view->getTemplateMode();
+        \Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+        $html = \Craft::$app->view->renderTemplate('vzaddress/_frontend/googlemap_dynamic', [
             'options' => $params,
             'config'  => $config,
             'icon'    => $icon,
             'key'     => $key,
         ]);
+        \Craft::$app->view->setTemplateMode($oldMode);
 
-        return TemplateHelper::getRaw($output);
+        return TemplateHelper::getRaw($html);
     }
 
 
