@@ -1,0 +1,47 @@
+{
+    "name": "elivz/vzaddress",
+    "description": "A simple address field for Craft.",
+    "type": "craft-plugin",
+    "version": "2.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "vz address",
+        "address",
+        "location",
+        "map"
+    ],
+    "support": {
+        "docs": "https://github.com/elivz/VzAddress-Craft/blob/master/README.md",
+        "issues": "https://github.com/elivz/VzAddress-Craft/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Eli Van Zoeren",
+            "homepage": "http://elivz.com"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.0-RC1"
+    },
+    "autoload": {
+        "psr-4": {
+          "elivz\\vzaddress\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "VZ Address",
+        "handle": "vzaddress",
+        "schemaVersion": "2.0.0",
+        "hasCpSettings": true,
+        "hasCpSection": false,
+        "changelogUrl": "https://raw.githubusercontent.com/elivz/VzAddress-Craft/master/CHANGELOG.md",
+        "components": {
+            "vzAddressService": "elivz\\vzaddress\\services\\VzAddressService"
+        },
+        "class": "elivz\\vzaddress\\VzAddress"
+    }
+}

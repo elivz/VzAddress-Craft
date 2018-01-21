@@ -1,0 +1,26 @@
+<div id="{{ config.id }}" class="google-map" style="width:{{ config.width }}px; height:{{ config.height }}px;"></div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{ key }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var map = new google.maps.Map(
+            document.getElementById('{{ config.id }}'),
+            {{ options|json_encode|raw }}
+        );
+
+        {% if icon.url is defined %}
+            var icon = {
+                url: "{{ icon.url }}",
+                {% if icon.width is defined and icon.height is defined %}scaledSize: new google.maps.Size({{icon.width}}, {{icon.height}}),{% endif %}
+                {% if icon.origin.x is defined and icon.origin.y is defined %}origin: new google.maps.Point({{icon.origin.x}},{{icon.origin.y}}),{% endif %}
+                {% if icon.anchor.x is defined and icon.anchor.y is defined %}anchor: new google.maps.Point({{icon.anchor.x}}, {{icon.anchor.y}}){% endif %}
+            };
+        {% endif %}
+
+        var marker = new google.maps.Marker({
+            position: {{ options.center|json_encode|raw }},
+            map: map{% if icon %},
+            icon: icon{% endif %}
+        });
+    });
+</script>

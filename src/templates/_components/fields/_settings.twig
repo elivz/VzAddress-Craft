@@ -1,0 +1,33 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * VZ Address plugin for Craft CMS
+ *
+ *  Field Settings
+ *
+ * @author    Eli Van Zoeren
+ * @copyright Copyright (c) 2017 Eli Van Zoeren
+ * @link      http://elivz.com
+ * @package   VzAddress
+ * @since     2.0.0
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle("elivz\\vzaddress\\assetbundles\\field\\FieldAsset") %}
+
+{{ forms.lightswitchField({
+    label: 'Show "Name" field'|t('vzaddress'),
+    id: 'showName',
+    name: 'showName',
+    on: field['showName']
+}) }}
+
+{{ forms.selectField({
+    label: 'Default country'|t('vzaddress'),
+    id: 'defaultCountry',
+    name: 'defaultCountry',
+    options: countries,
+    value: field['defaultCountry']
+}) }}

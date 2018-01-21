@@ -48,7 +48,7 @@ You can also output the html in one of three structured data formats: Schema.org
 
     {{ entry.fieldName.mapUrl('google', { zoom: 5 }) }}
 
-The first parameter is the service to use, one of `google`, `yahoo`, `bing`, or `mapquest`. The second parameter is an array of paramters to be passed through in the map URL. Please see the documentation for the particular mapping provider you are using for the available options.
+The first parameter is the service to use, one of `google`, `osm` (OpenStreetMap), `here`, `bing`, or `mapquest`. The second parameter is an array of paramters to be passed through in the map URL. Please see the documentation for the particular mapping provider you are using for the available options.
 
 ### Output the URL of a static map image from Google Maps
 
@@ -57,7 +57,7 @@ The first parameter is the service to use, one of `google`, `yahoo`, `bing`, or 
         height: '200',
         type: 'satellite',
         key: '12345'
-        styles: [
+        style: [
             {
                 'featureType': 'road.local',
                 'elementType': 'geometry',
@@ -74,13 +74,13 @@ The available parameters include:
 * `width` and `height` - The size in pixels of the image that is generated. (default: 400 x 200)
 * `scale` - Number of pixels returned. Set this to `2` for retina/hidpi support. (default: 1)
 * `zoom` - Zoom level of the map. (default: 14)
-* `format` - Specifies the image format to return. One of: png, png32, jpg, jpg-baseline, or gif. (default: png)
+* `mapFormat` - Specifies the image format to return. One of: png, png32, jpg, jpg-baseline, or gif. (default: png)
 * `type` - One of: roadmap, satellite, hybrid, or terrain. (default: roadmap)
 * `markerSize` - The relative size of the pushpin that marks the address location. One of: normal, mid, small, or tiny. (default: normal)
 * `markerColor` - The color of the pushpin. Either a named color (black, brown, green, purple, yellow, blue, gray, orange, red, or white) or a 6-digit hex-code, like "#ff0000". Three-digit color codes are not supported. (default: red)
 * `markerLabel` - Instead of the normal dot, you can specify a single letter or number to appear on the pushpin. (default: none)
 * `key` - Your [Google API key](https://developers.google.com/maps/documentation/static-maps/get-api-key). Not required, but you may be subject to usage limits if you don't have an API key. You can also specify your API key globally in the plugin settings page. (default: none)
-* `styles` - A [multidimensional array](https://developers.google.com/maps/documentation/javascript/styling) defining the styling you wish to be applied to the map 
+* `style` - A [multidimensional array](https://developers.google.com/maps/documentation/javascript/styling) defining the styling you wish to be applied to the map 
 
 ### Output an image tag containing the static Google Map
 
@@ -119,7 +119,7 @@ Accepts the same parameters as `staticMapUrl`.
         tilt: '0',
         zoom: '16',
         zoomControl: 'false',
-        styles: [
+        style: [
             {
                 'featureType': 'road.local',
                 'elementType': 'geometry',
@@ -162,8 +162,17 @@ VZ Address makes available an array of all countries indexed by their country co
 Installation
 ------------
 
-Download and unzip the extension. Upload the `vzaddress` folder to your `/craft/plugins/` folder. Go to Settings -> Plugins in the Craft control panel and enable the VZ Address plugin. You can now create new Address fields.
+To install the plugin, follow these instructions.
 
+1. Open your terminal and go to your Craft project:
+
+        cd /path/to/project
+
+2. Then tell Composer to load the plugin:
+
+        composer require elivz/vz-address
+
+3. In the Control Panel, go to Settings → Plugins and click the “Install” button for VZ Address.
 
 Support
 -------
@@ -174,4 +183,3 @@ Roadmap
 -------
 
 * Map preview in control panel
-* Geocoding to fill in missing pieces of the address

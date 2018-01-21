@@ -1,0 +1,106 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * VZ Address plugin for Craft CMS 3.x
+ *
+ *  Field Input
+ *
+ * @author    Eli Van Zoeren
+ * @copyright Copyright (c) 2017 Eli Van Zoeren
+ * @link      http://elivz.com
+ * @package   VzAddress
+ * @since     2.0.0
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+<div id="{{ id }}" class="vzaddress-wrapper">
+    <div class="vzaddress-fields">
+        {% if field.settings.showName %}
+            <div class="vzaddress-field vzaddress-name">
+                <label for="{{ id~'-name' }}">
+                    {{ 'Name'|t('vzaddress') }}
+                </label>
+                {{ forms.text({
+                    id: id~'-name',
+                    name: name~'[name]',
+                    value: value.name,
+                    placeholder: 'Name'|t('vzaddress')
+                }) }}
+            </div>
+        {% endif %}
+
+        <div class="vzaddress-field vzaddress-street">
+            <label for="{{ id~'-street' }}">
+                {{ 'Street Address'|t('vzaddress') }}
+            </label>
+            {{ forms.text({
+                id: id~'-street',
+                name: name~'[street]',
+                value: value.street,
+                placeholder: 'Street Address'|t('vzaddress')
+            }) }}
+        </div>
+
+        <div class="vzaddress-field vzaddress-street2">
+            <label for="{{ id~'-street2' }}">
+                {{ 'Street Address 2'|t('vzaddress') }}
+            </label>
+            {{ forms.text({
+                id: id~'-street2',
+                name: name~'[street2]',
+                value: value.street2,
+                placeholder: 'Street Address 2'|t('vzaddress')
+            }) }}
+        </div>
+
+        <div class="vzaddress-field vzaddress-city">
+            <label for="{{ id~'-city' }}">
+                {{ 'City'|t('vzaddress') }}
+            </label>
+            {{ forms.text({
+                id: id~'-city',
+                name: name~'[city]',
+                value: value.city,
+                placeholder: 'City'|t('vzaddress')
+            }) }}
+        </div>
+
+        <div class="vzaddress-field vzaddress-region">
+            <label for="{{ id~'-region' }}">
+                {{ 'State/Province'|t('vzaddress') }}
+            </label>
+            {{ forms.text({
+                id: id~'-region',
+                name: name~'[region]',
+                value: value.region,
+                placeholder: 'State/Province'|t('vzaddress')
+            }) }}
+        </div>
+
+        <div class="vzaddress-field vzaddress-postalCode">
+            <label for="{{ id~'-postalCode' }}">
+                {{ 'Postal Code'|t('vzaddress') }}
+            </label>
+            {{ forms.text({
+                id: id~'-postalCode',
+                name: name~'[postalCode]',
+                value: value.postalCode,
+                placeholder: 'Postal Code'|t('vzaddress')
+            }) }}
+        </div>
+
+        <div class="vzaddress-field vzaddress-country">
+            <label for="{{ id~'-country' }}">
+                {{ 'Country'|t('vzaddress') }}
+            </label>
+            {{ forms.select({
+                id: id~'-country',
+                name: name~'[country]',
+                options: countries,
+                value: value.country
+            }) }}
+        </div>
+    </div>
+</div>
