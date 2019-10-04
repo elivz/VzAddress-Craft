@@ -26,9 +26,9 @@ use craft\web\View;
  *
  * https://craftcms.com/docs/plugins/models
  *
- * @author    Eli Van Zoeren
- * @package   VzAddress
- * @since     2.0.0
+ * @author  Eli Van Zoeren
+ * @package VzAddress
+ * @since   2.0.0
  *
  * @property string $countryName
  */
@@ -142,16 +142,15 @@ class Address extends Model
     /**
      * Returns an array of the address components
      *
-     * @param array $fields the fields being requested
-     * @param array $expand the additional fields being requested for exporting.
-     * @param bool $recursive whether to recursively return array representation of embedded objects.
+     * @param  array $fields    the fields being requested
+     * @param  array $expand    the additional fields being requested for exporting.
+     * @param  bool  $recursive whether to recursively return array representation of embedded objects.
      * @return array the array representation of the object
      */
     public function toArray(array $fields = [], array $expand = [], $recursive = true)
     {
         $address = parent::toArray($fields, $expand, $recursive);
         $address = array_filter($address);
-        $address['country'] = $this->countryName;
         return $address;
     }
 
@@ -166,9 +165,11 @@ class Address extends Model
         if ($formatted) {
             $oldMode = \Craft::$app->view->getTemplateMode();
             \Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
-            $html = \Craft::$app->view->renderTemplate('vzaddress/_frontend/text', [
+            $html = \Craft::$app->view->renderTemplate(
+                'vzaddress/_frontend/text', [
                 'address' => $this,
-            ]);
+                ]
+            );
             \Craft::$app->view->setTemplateMode($oldMode);
 
             return $html;
@@ -188,14 +189,15 @@ class Address extends Model
         if (in_array($format, ['schema', 'microformat', 'rdfa'], true)) {
             $oldMode = \Craft::$app->view->getTemplateMode();
             \Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
-            $html = \Craft::$app->view->renderTemplate("vzaddress/_frontend/$format", [
+            $html = \Craft::$app->view->renderTemplate(
+                "vzaddress/_frontend/$format", [
                 'address' => $this,
-            ]);
+                ]
+            );
             \Craft::$app->view->setTemplateMode($oldMode);
         } else {
             $html = str_replace("\n", '<br>', $this->text(true));
         }
-
         return Template::raw($html);
     }
 
@@ -208,33 +210,34 @@ class Address extends Model
      */
     public function mapUrl(string $source = 'google', array $params = []): string
     {
-        if (empty($params['key']) && !empty($this->_settings->googleApiKey)) {
-            $params['key'] = $this->_settings->googleApiKey;
-        }
-
-        $params = count($params) ? '&' . http_build_query($params) : '';
-        $output = '';
-
         // Create the url-encoded address
         $query = urlencode(implode(', ', $this->toArray()));
 
+        // Any additional URL parameters to include
+        $params = count($params) ? '&' . http_build_query($params) : '';
+
         if ($source == 'osm') {
-            return "http://www.openstreetmap.org/search?query={$query}?{$params}";
+            $url = "http://www.openstreetmap.org/search?query={$query}?{$params}";
         } elseif ($source == 'here') {
-            return "https://wego.here.com/search/{$query}?{$params}";
+            $url = "https://wego.here.com/search/{$query}?{$params}";
         } elseif ($source == 'bing') {
-            return "https://www.bing.com/maps?q={$query}{$params}";
+            $url = "https://www.bing.com/maps?q={$query}{$params}";
         } elseif ($source == 'mapquest') {
-            return "https://www.mapquest.com/search/results?query={$query}{$params}";
+            $url = "https://www.mapquest.com/search/results?query={$query}{$params}";
         } else {
-            return "https://www.google.com/maps?q={$query}{$params}";
+            if (empty($params['key']) && !empty($this->_settings->googleApiKey)) {
+                $params['key'] = $this->_settings->googleApiKey;
+            }
+            $url = "https://www.google.com/maps?q={$query}{$params}";
         }
+
+        return $url;
     }
 
     /**
      * Returns the URL for a static map image from one of several sources
      *
-     * @param  array  $params Parameters to control the map size & style
+     * @param  array $params Parameters to control the map size & style
      * @return string
      */
     public function staticMapUrl(array $params = []): string
@@ -358,7 +361,7 @@ class Address extends Model
     /**
      * Returns an HTML image tag for a static map image from one of several sources
      *
-     * @param  array  $params Parameters to control the map size & style
+     * @param  array $params Parameters to control the map size & style
      * @return string
      */
     public function staticMap(array $params = []): \Twig_Markup
@@ -401,7 +404,7 @@ class Address extends Model
         // these mirror MapOptions object - https://developers.google.com/maps/documentation/javascript/3.exp/reference#MapOptions
         $defaultParams = [
             'zoom'   => 14,
-            'center' => $this->getCoords(),
+            'center' => $this->_getCoords(),
         ];
         $params = array_merge($defaultParams, $params);
 
@@ -415,12 +418,14 @@ class Address extends Model
         // Get the rendered template as a string
         $oldMode = \Craft::$app->view->getTemplateMode();
         \Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
-        $html = \Craft::$app->view->renderTemplate('vzaddress/_frontend/googlemap_dynamic', [
+        $html = \Craft::$app->view->renderTemplate(
+            'vzaddress/_frontend/googlemap_dynamic', [
             'options' => $params,
             'config'  => $config,
             'icon'    => $icon,
-            'key'     => $key,
-        ]);
+            'key'     => $params['key'],
+            ]
+        );
         \Craft::$app->view->setTemplateMode($oldMode);
 
         return TemplateHelper::getRaw($html);
@@ -431,10 +436,20 @@ class Address extends Model
     // =========================================================================
 
     /**
+     * Geocode the address and return the latitude and longitude
+     * 
+     * @return array
+     */
+    private function _getCoords() {
+        
+    }
+
+    /**
      * Parse the given style array and return a formatted string
+     *
      * @see https://developers.google.com/maps/documentation/javascript/styling Documentation of styling Google Maps
      *
-     * @var array $style A multidimensional array structured according to Google's Styled Maps configuration
+     * @var    array $style A multidimensional array structured according to Google's Styled Maps configuration
      * @return string A style string formatted for use with the Google Static Maps API
      */
     private function _googleMapsStyleString(array $style): string
