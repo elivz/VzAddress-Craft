@@ -16,7 +16,7 @@ use craft\base\Model;
 use craft\helpers\Template;
 use craft\web\View;
 use elivz\vzaddress\VzAddress;
-use Twig_Markup;
+use Twig\Markup;
 use yii\base\UserException;
 
 /**
@@ -135,7 +135,7 @@ class Address extends Model
      *
      * @return string Single-line address
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->text(true);
     }
@@ -148,7 +148,7 @@ class Address extends Model
      * @param  bool  $recursive whether to recursively return array representation of embedded objects.
      * @return array the array representation of the object
      */
-    public function toArray(array $fields = [], array $expand = [], $recursive = true)
+    public function toArray(array $fields = [], array $expand = [], $recursive = true): array
     {
         $address = parent::toArray($fields, $expand, $recursive);
         $address = array_filter($address);
@@ -186,7 +186,7 @@ class Address extends Model
      * @param  string $format Which format to use
      * @return $string
      */
-    public function html(string $format = 'plain'): Twig_Markup
+    public function html(string $format = 'plain'): Markup
     {
         if (in_array($format, ['schema', 'microformat', 'rdfa'], true)) {
             $oldMode = Craft::$app->view->getTemplateMode();

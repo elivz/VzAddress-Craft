@@ -13,6 +13,7 @@ namespace elivz\vzaddress\services;
 
 use craft\base\Component;
 use elivz\vzaddress\models\Address;
+use elivz\vzaddress\VzAddress;
 use yii\base\UserException;
 
 /**

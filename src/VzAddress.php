@@ -14,10 +14,8 @@ namespace elivz\vzaddress;
 use Craft;
 use craft\base\Model;
 use craft\base\Plugin;
-use craft\events\PluginEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\services\Fields;
-use craft\services\Plugins;
 use craft\web\twig\variables\CraftVariable;
 use elivz\vzaddress\fields\Address;
 use elivz\vzaddress\models\Settings;
@@ -84,7 +82,7 @@ class VzAddress extends Plugin
         Event::on(
             Fields::class,
             Fields::EVENT_REGISTER_FIELD_TYPES,
-            function (RegisterComponentTypesEvent $event) {
+            function(RegisterComponentTypesEvent $event) {
                 $event->types[] = Address::className();
             }
         );
@@ -93,31 +91,11 @@ class VzAddress extends Plugin
         Event::on(
             CraftVariable::class,
             CraftVariable::EVENT_INIT,
-            function (Event $event) {
+            function(Event $event) {
                 /** @var CraftVariable $variable */
                 $variable = $event->sender;
                 $variable->set('vzAddress', VzAddressVariable::class);
             }
-        );
-
-        // Do something after we're installed
-        Event::on(
-            Plugins::class,
-            Plugins::EVENT_AFTER_INSTALL_PLUGIN,
-            function (PluginEvent $event) {
-                if ($event->plugin === $this) {
-                    // We were just installed
-                }
-            }
-        );
-
-        Craft::info(
-            Craft::t(
-                'vzaddress',
-                '{name} plugin loaded',
-                ['name' => $this->name]
-            ),
-            __METHOD__
         );
     }
 
@@ -135,8 +113,8 @@ class VzAddress extends Plugin
     }
 
     /**
-     * Returns the rendered settings HTML, which will be inserted into the content
-     * block on the settings page.
+     * Returns the rendered settings HTML, which will be inserted into the
+     * content block on the settings page.
      *
      * @return string The rendered settings HTML
      */

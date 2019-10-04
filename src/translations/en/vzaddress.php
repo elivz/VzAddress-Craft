@@ -33,7 +33,7 @@ return [
     'Postal Code' => 'Postal Code',
     'Country' => 'Country',
     'Google API Key' => 'Google API Key',
-    'An API key is required for any new implementation of Google Maps. You will need to <a href="$$$" target="_blank">register your app with Google</a> and paste the provided key here before any of the Google template tags will work.' => 'An API key is required for any new implementation of Google Maps. You will need to <a href="$$$" target="_blank">register your app with Google</a> and paste the provided key here before any of the Google template tags will work.',
+    'An API key is required to use Google Maps. You will need to <a href="$$$" target="_blank">register your app with Google</a>, enable the "Maps Embed" and "Geolocation" APIs and paste the provided key here before geocoding or any of the Google template tags will work.' => 'An API key is required for any new implementation of Google Maps. You will need to <a href="$$$" target="_blank">register your app with Google</a> and paste the provided key here before any of the Google template tags will work.',
     'Show "Name" field' => 'Show "Name" field',
     'Default country' => 'Default country',
 ];

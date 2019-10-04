@@ -23,12 +23,6 @@ use yii\db\Schema;
 /**
  *  Field
  *
- * Whenever someone creates a new field in Craft, they must specify what
- * type of field it is. The system comes with a handful of field types baked in,
- * and we’ve made it extremely easy for plugins to add new ones.
- *
- * https://craftcms.com/docs/plugins/field-types
- *
  * @author  Eli Van Zoeren
  * @package VzAddress
  * @since   2.0.0
@@ -39,12 +33,12 @@ class Address extends Field
     // =========================================================================
 
     /**
-     * @var bool
+     * @var bool  Show name field
      */
     public $showName = true;
 
     /**
-     * @var string
+     * @var string  Default country value
      */
     public $defaultCountry;
 
@@ -101,7 +95,7 @@ class Address extends Field
     /**
      * Normalizes the field’s value for use.
      *
-     * @param mixed                 $value   The raw field value
+     * @param mixed $value The raw field value
      * @param ElementInterface|null $element The element the field is associated with, if there is one
      *
      * @return mixed The prepared field value
@@ -137,8 +131,8 @@ class Address extends Field
     /**
      * Returns the field’s input HTML.
      *
-     * @param mixed                 $value   The field’s value. This will either be the [[normalizeValue() normalized
-     *                                       value]], raw POST data (i.e. if there was a validation error), or null
+     * @param mixed $value The field’s value. This will either be the [[normalizeValue() normalized
+     *                     value]], raw POST data (i.e. if there was a validation error), or null
      * @param ElementInterface|null $element The element the field is associated with, if there is one
      *
      * @return string The input HTML.
@@ -156,14 +150,12 @@ class Address extends Field
         $countries = VzAddress::getInstance()->address->countries;
 
         // Variables to pass down to our field JavaScript to let it namespace properly
-        $jsonVars = Json::encode(
-            [
+        $jsonVars = Json::encode([
             'id' => $id,
             'name' => $this->handle,
             'namespace' => $namespacedId,
             'prefix' => Craft::$app->getView()->namespaceInputId(''),
-            ]
-        );
+        ]);
         Craft::$app->getView()->registerJs("$('#{$namespacedId}-field').VzAddress(" . $jsonVars . ");");
 
         // Render the input template
@@ -176,6 +168,7 @@ class Address extends Field
                 'id' => $id,
                 'namespacedId' => $namespacedId,
                 'countries' => $countries,
+                'defaultCountry' => $this->defaultCountry,
             ]
         );
     }

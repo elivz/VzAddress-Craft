@@ -99,7 +99,7 @@
                 id: id~'-country',
                 name: name~'[country]',
                 options: countries,
-                value: value.country
+                value: value.country|default(defaultCountry)
             }) }}
         </div>
     </div>
