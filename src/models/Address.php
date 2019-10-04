@@ -1,22 +1,23 @@
 <?php
+
 /**
  * VZ Address plugin for Craft CMS 3.x
  *
  * A simple address field for Craft.
  *
  * @link      http://elivz.com
- * @copyright Copyright (c) 2017 Eli Van Zoeren
+ * @copyright Copyright (c) 2019 Eli Van Zoeren
  */
 
 namespace elivz\vzaddress\models;
 
-use elivz\vzaddress\VzAddress;
-
 use Craft;
 use craft\base\Model;
-use craft\helpers\Localization;
 use craft\helpers\Template;
 use craft\web\View;
+use elivz\vzaddress\VzAddress;
+use Twig_Markup;
+use yii\base\UserException;
 
 /**
  * Address Model
@@ -157,20 +158,21 @@ class Address extends Model
     /**
      * Returns a plain-text representation of the address
      *
-     * @param  boolean $formatted Whether line-breaks should be included
+     * @param boolean $formatted Whether line-breaks should be included
      * @return string
      */
     public function text(bool $formatted = false): string
     {
         if ($formatted) {
-            $oldMode = \Craft::$app->view->getTemplateMode();
-            \Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
-            $html = \Craft::$app->view->renderTemplate(
-                'vzaddress/_frontend/text', [
+            $oldMode = Craft::$app->view->getTemplateMode();
+            Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+            $html = Craft::$app->view->renderTemplate(
+                'vzaddress/_frontend/text',
+                [
                 'address' => $this,
                 ]
             );
-            \Craft::$app->view->setTemplateMode($oldMode);
+            Craft::$app->view->setTemplateMode($oldMode);
 
             return $html;
         }
@@ -184,17 +186,18 @@ class Address extends Model
      * @param  string $format Which format to use
      * @return $string
      */
-    public function html(string $format = 'plain'): \Twig_Markup
+    public function html(string $format = 'plain'): Twig_Markup
     {
         if (in_array($format, ['schema', 'microformat', 'rdfa'], true)) {
-            $oldMode = \Craft::$app->view->getTemplateMode();
-            \Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
-            $html = \Craft::$app->view->renderTemplate(
-                "vzaddress/_frontend/$format", [
+            $oldMode = Craft::$app->view->getTemplateMode();
+            Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+            $html = Craft::$app->view->renderTemplate(
+                "vzaddress/_frontend/$format",
+                [
                 'address' => $this,
                 ]
             );
-            \Craft::$app->view->setTemplateMode($oldMode);
+            Craft::$app->view->setTemplateMode($oldMode);
         } else {
             $html = str_replace("\n", '<br>', $this->text(true));
         }
@@ -263,7 +266,7 @@ class Address extends Model
             $appCode = !empty($params['appCode']) ? strtolower($params['appCode']) : false;
 
             if (!$appId || !$appCode) {
-                throw new \yii\base\UserException('You must specify an App ID and App Code to use HERE WeGo maps.');
+                throw new UserException('You must specify an App ID and App Code to use HERE WeGo maps.');
             }
 
             // Rename width & height parameters
@@ -287,11 +290,11 @@ class Address extends Model
             }
 
             if (empty($params['key'])) {
-                throw new \yii\base\UserException('You must specify a Bing Maps API Key.');
+                throw new UserException('You must specify a Bing Maps API Key.');
             }
 
             // Combine width & height parameters
-            $params['size'] = $params['width'].','.$params['height'];
+            $params['size'] = $params['width'] . ',' . $params['height'];
             unset($params['width'], $params['height']);
 
             // Place a marker on the address
@@ -308,11 +311,11 @@ class Address extends Model
             }
 
             if (empty($params['key'])) {
-                throw new \yii\base\UserException('You must specify a Mapquest API Key.');
+                throw new UserException('You must specify a Mapquest API Key.');
             }
 
             // Combine width & height parameters
-            $params['size'] = $params['width'].','.$params['height'];
+            $params['size'] = $params['width'] . ',' . $params['height'];
             unset($params['width'], $params['height']);
 
             // Place a marker on the address
@@ -329,18 +332,18 @@ class Address extends Model
             }
 
             if (!$params['key']) {
-                throw new \yii\base\UserException('You must specify an API Key to use Google Maps.');
+                throw new UserException('You must specify an API Key to use Google Maps.');
             }
 
             // Combine width & height parameters
-            $params['size'] = $params['width'].'x'.$params['height'];
+            $params['size'] = $params['width'] . 'x' . $params['height'];
             unset($params['width'], $params['height']);
 
             // Marker options
             $params['markers'] = '';
-            $params['markers'] .= !empty($params['markerSize']) ? 'size:'.strtolower($params['markerSize']).'|' : false;
-            $params['markers'] .= !empty($params['markerLabel']) ? 'color:'.strtoupper($params['markerLabel']).'|' : false;
-            $params['markers'] .= !empty($params['markerColor']) ? 'label:'.strtolower(str_replace('#', '0x', $params['markerColor'])).'|' : false;
+            $params['markers'] .= !empty($params['markerSize']) ? 'size:' . strtolower($params['markerSize']) . '|' : false;
+            $params['markers'] .= !empty($params['markerLabel']) ? 'color:' . strtoupper($params['markerLabel']) . '|' : false;
+            $params['markers'] .= !empty($params['markerColor']) ? 'label:' . strtolower(str_replace('#', '0x', $params['markerColor'])) . '|' : false;
             $params['markers'] .= urlencode(implode(', ', $this->toArray()));
             unset($params['markerSize'], $params['markerLabel'], $params['markerColor']);
 
@@ -364,14 +367,14 @@ class Address extends Model
      * @param  array $params Parameters to control the map size & style
      * @return string
      */
-    public function staticMap(array $params = []): \Twig_Markup
+    public function staticMap(array $params = []): Twig_Markup
     {
         $width = !empty($params['width']) ? (int)$params['width'] : 400;
         $height = !empty($params['height']) ? (int)$params['height'] : 200;
         $mapUrl = $this->staticMapUrl($params);
         $alt = htmlspecialchars($this->text());
 
-        $output = '<img src="'.$mapUrl.'" alt="'.$alt.'" width="'.$width.'" height="'.$height.'">';
+        $output = '<img src="' . $mapUrl . '" alt="' . $alt . '" width="' . $width . '" height="' . $height . '">';
         return Template::raw($output);
     }
 
@@ -379,14 +382,14 @@ class Address extends Model
     /**
      * Generate a dynamic map using the Google Maps Javascript API
      *
-     * @var array $params An array of MapOptions for the Google Map object
+     * @return Twig_Markup The markup string wrapped in a Twig_Markup object
      * @var array $icon An array of configuration options for the Marker icon
      *
      * @see https://developers.google.com/maps/documentation/javascript/3.exp/reference#MapOptions
      *
-     * @return \Twig_Markup The markup string wrapped in a Twig_Markup object
+     * @var array $params An array of MapOptions for the Google Map object
      */
-    public function dynamicMap($params = [], $icon = []): \Twig_Markup
+    public function dynamicMap($params = [], $icon = []): Twig_Markup
     {
         // Get the API key, either from the template params or the plugin config
         if (empty($params['key']) && !empty($this->_settings->googleApiKey)) {
@@ -394,7 +397,7 @@ class Address extends Model
         }
 
         if (!$params['key']) {
-            throw new \yii\base\UserException('You must specify an API Key to use Google Maps.');
+            throw new UserException('You must specify an API Key to use Google Maps.');
         }
 
         $width  = isset($params['width']) ? strtolower($params['width']) : '400';
@@ -410,23 +413,24 @@ class Address extends Model
 
         // Configuration for the generated map
         $config = [
-            'id'     => uniqid('map-'),
+            'id' => uniqid('map-', true),
             'width'  => $width,
             'height' => $height,
         ];
 
         // Get the rendered template as a string
-        $oldMode = \Craft::$app->view->getTemplateMode();
-        \Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
-        $html = \Craft::$app->view->renderTemplate(
-            'vzaddress/_frontend/googlemap_dynamic', [
-            'options' => $params,
+        $oldMode = Craft::$app->view->getTemplateMode();
+        Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+        $html = Craft::$app->view->renderTemplate(
+            'vzaddress/_frontend/googlemap_dynamic',
+            [
+                'options' => $params,
             'config'  => $config,
             'icon'    => $icon,
             'key'     => $params['key'],
             ]
         );
-        \Craft::$app->view->setTemplateMode($oldMode);
+        Craft::$app->view->setTemplateMode($oldMode);
 
         return TemplateHelper::getRaw($html);
     }
@@ -437,11 +441,11 @@ class Address extends Model
 
     /**
      * Geocode the address and return the latitude and longitude
-     * 
+     *
      * @return array
      */
-    private function _getCoords() {
-        
+    private function _getCoords()
+    {
     }
 
     /**

@@ -1,18 +1,17 @@
 <?php
+
 /**
  * VZ Address plugin for Craft CMS 3.x
  *
  * A simple address field for Craft.
  *
  * @link      http://elivz.com
- * @copyright Copyright (c) 2017 Eli Van Zoeren
+ * @copyright Copyright (c) 2019 Eli Van Zoeren
  */
 
 namespace elivz\vzaddress\variables;
 
 use elivz\vzaddress\VzAddress;
-
-use Craft;
 
 /**
  * VZ Address Variable

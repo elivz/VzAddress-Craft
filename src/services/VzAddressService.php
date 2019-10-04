@@ -1,20 +1,19 @@
 <?php
+
 /**
  * VZ Address plugin for Craft CMS 3.x
  *
  * A simple address field for Craft.
  *
  * @link      http://elivz.com
- * @copyright Copyright (c) 2017 Eli Van Zoeren
+ * @copyright Copyright (c) 2019 Eli Van Zoeren
  */
 
 namespace elivz\vzaddress\services;
 
-use elivz\vzaddress\VzAddress;
-use elivz\vzaddress\models\Address;
-
-use Craft;
 use craft\base\Component;
+use elivz\vzaddress\models\Address;
+use yii\base\UserException;
 
 /**
  * VzAddressService Service
@@ -34,15 +33,29 @@ class VzAddressService extends Component
     // Private Variables
     // =========================================================================
 
+    /**
+     * @var array   Settings
+     */
+    public $_settings;
+
+    /**
+     * @var array   Countries
+     */
     public $countries;
 
 
     // Public Methods
     // =========================================================================
 
-    function __construct()
+    /**
+     * @inheritdoc
+     */
+    public function init()
     {
-        $this->countries = require dirname(__DIR__).DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'countries.php';
+        parent::init();
+
+        $this->_settings = VzAddress::getInstance()->getSettings();
+        $this->countries = require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'countries.php';
     }
 
     /**
@@ -53,12 +66,14 @@ class VzAddressService extends Component
      */
     public function geocodeAddress(Address $address): array
     {
-        if (empty($key)) {
-            throw new \yii\base\UserException('You must specify a Google Maps API Key in the VZ Address plugin settings before you can geocode an address.');
+        if (empty($this->_settings->key)) {
+            throw new UserException('You must specify a Google Maps API Key in the VZ Address plugin settings before you can geocode an address.');
         }
 
+        $coords = [];
+
         $addressString = urlencode((string)$address);
-        $url = "https://maps.google.com/maps/api/geocode/json?address={$address}&key={$key}";
+        $url = "https://maps.google.com/maps/api/geocode/json?address={$address}&key={$this->_settings->key}";
 
         // get the json response
         $response = json_decode(file_get_contents($url), true);
@@ -70,11 +85,13 @@ class VzAddressService extends Component
 
             // verify if data is complete
             if ($lat && $lng) {
-                return array(
+                $coords = [
                     'latitude' => $lat,
                     'longitude' => $lng,
-                );
+                ];
             }
         }
+
+        return $coords;
     }
 }

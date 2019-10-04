@@ -3,6 +3,9 @@
 .env.sh
 .env
 
+# DEVELOPMENT FILES
+/development
+
 # COMPOSER
 /vendor
 

@@ -1,28 +1,28 @@
 <?php
+
 /**
  * VZ Address plugin for Craft CMS 3.x
  *
  * A simple address field for Craft.
  *
  * @link      http://elivz.com
- * @copyright Copyright (c) 2017 Eli Van Zoeren
+ * @copyright Copyright (c) 2019 Eli Van Zoeren
  */
 
 namespace elivz\vzaddress;
 
+use Craft;
+use craft\base\Model;
+use craft\base\Plugin;
+use craft\events\PluginEvent;
+use craft\events\RegisterComponentTypesEvent;
+use craft\services\Fields;
+use craft\services\Plugins;
+use craft\web\twig\variables\CraftVariable;
 use elivz\vzaddress\fields\Address;
+use elivz\vzaddress\models\Settings;
 use elivz\vzaddress\services\VzAddressService;
 use elivz\vzaddress\variables\VzAddressVariable;
-use elivz\vzaddress\models\Settings;
-
-use Craft;
-use craft\base\Plugin;
-use craft\services\Plugins;
-use craft\events\PluginEvent;
-use craft\services\Fields;
-use craft\web\twig\variables\CraftVariable;
-use craft\events\RegisterComponentTypesEvent;
-
 use yii\base\Event;
 
 /**
@@ -127,7 +127,7 @@ class VzAddress extends Plugin
     /**
      * Creates and returns the model used to store the plugin’s settings.
      *
-     * @return \craft\base\Model|null
+     * @return Model|null
      */
     protected function createSettingsModel()
     {

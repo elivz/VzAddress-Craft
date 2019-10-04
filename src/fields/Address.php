@@ -1,24 +1,23 @@
 <?php
+
 /**
  * VZ Address plugin for Craft CMS 3.x
  *
  * A simple address field for Craft.
  *
  * @link      http://elivz.com
- * @copyright Copyright (c) 2017 Eli Van Zoeren
+ * @copyright Copyright (c) 2019 Eli Van Zoeren
  */
 
 namespace elivz\vzaddress\fields;
-
-use elivz\vzaddress\VzAddress;
-use elivz\vzaddress\assetbundles\field\FieldAsset;
-use elivz\vzaddress\models\Address as AddressModel;
 
 use Craft;
 use craft\base\ElementInterface;
 use craft\base\Field;
 use craft\helpers\Json;
-
+use elivz\vzaddress\assetbundles\field\FieldAsset;
+use elivz\vzaddress\models\Address as AddressModel;
+use elivz\vzaddress\VzAddress;
 use yii\db\Schema;
 
 /**
@@ -137,7 +136,7 @@ class Address extends Field
 
     /**
      * Returns the field’s input HTML.
-     * 
+     *
      * @param mixed                 $value   The field’s value. This will either be the [[normalizeValue() normalized
      *                                       value]], raw POST data (i.e. if there was a validation error), or null
      * @param ElementInterface|null $element The element the field is associated with, if there is one

@@ -4,7 +4,7 @@
  * Address Field JS
  *
  * @author    Eli Van Zoeren
- * @copyright Copyright (c) 2017 Eli Van Zoeren
+ * @copyright Copyright (c) 2019 Eli Van Zoeren
  * @link      http://elivz.com
  * @package   VzAddress
  * @since     2.0.0VzAddress

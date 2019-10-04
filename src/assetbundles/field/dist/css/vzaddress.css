@@ -4,75 +4,75 @@
  * Address Field CSS
  *
  * @author    Eli Van Zoeren
- * @copyright Copyright (c) 2017 Eli Van Zoeren
+ * @copyright Copyright (c) 2019 Eli Van Zoeren
  * @link      http://elivz.com
  * @package   VzAddress
  * @since     2.0.0
  */
 
 .vzaddress-wrapper {
-	position: relative;
-	display: table;
-	width: 100%;
+    position: relative;
+    display: table;
+    width: 100%;
 }
 
 .vzaddress-fields {
-	display: block;
-	width: 100%;
-	padding: 0;
+    display: block;
+    width: 100%;
+    padding: 0;
 }
 
 .vzaddress-field {
-	padding-bottom: 0.75em;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
+    padding-bottom: 0.75em;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .vzaddress-field label {
-	position: absolute;
-	overflow: hidden;
-	width: 0;
-	height: 0;
-	clip: rect(0 0 0 0);
+    position: absolute;
+    overflow: hidden;
+    width: 0;
+    height: 0;
+    clip: rect(0 0 0 0);
 }
 
 .vzaddress-region,
 .vzaddress-postalCode {
-	float: left;
-	width: 50%;
-	padding-left: 0.375em;
+    float: left;
+    width: 50%;
+    padding-left: 0.375em;
 }
 
 .wide .vzaddress-region,
 .wide .vzaddress-postalCode {
-	width: 25%;
+    width: 25%;
 }
 
 .vzaddress-region {
-	padding-left: 0;
-	padding-right: 0.375em;
+    padding-left: 0;
+    padding-right: 0.375em;
 }
 
 .vzaddress-country {
-	clear: both;
-	width: 100%;
-	padding-bottom: 0;
+    clear: both;
+    width: 100%;
+    padding-bottom: 0;
 }
 
 .wide .vzaddress-country {
-	float: right;
-	clear: none;
-	width: 50%;
-	padding-left: 0.75em;
-	padding-right: 0;
+    float: right;
+    clear: none;
+    width: 50%;
+    padding-left: 0.75em;
+    padding-right: 0;
 }
 
 .vzaddress-country .select {
-	display: block;
-	width: 100%;
+    display: block;
+    width: 100%;
 }
 
 .vzaddress-country select {
-	width: 100%;
+    width: 100%;
 }
