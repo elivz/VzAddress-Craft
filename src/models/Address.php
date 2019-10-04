@@ -14,6 +14,7 @@ namespace elivz\vzaddress\models;
 use Craft;
 use craft\base\Model;
 use craft\helpers\Template;
+use craft\helpers\UrlHelper;
 use craft\web\View;
 use elivz\vzaddress\VzAddress;
 use Twig\Markup;
@@ -143,9 +144,9 @@ class Address extends Model
     /**
      * Returns an array of the address components
      *
-     * @param  array $fields    the fields being requested
-     * @param  array $expand    the additional fields being requested for exporting.
-     * @param  bool  $recursive whether to recursively return array representation of embedded objects.
+     * @param array $fields the fields being requested
+     * @param array $expand the additional fields being requested for exporting.
+     * @param bool $recursive whether to recursively return array representation of embedded objects.
      * @return array the array representation of the object
      */
     public function toArray(array $fields = [], array $expand = [], $recursive = true): array
@@ -169,7 +170,7 @@ class Address extends Model
             $html = Craft::$app->view->renderTemplate(
                 'vzaddress/_frontend/text',
                 [
-                'address' => $this,
+                    'address' => $this,
                 ]
             );
             Craft::$app->view->setTemplateMode($oldMode);
@@ -183,7 +184,7 @@ class Address extends Model
     /**
      * Returns a formated HTML representation of the address
      *
-     * @param  string $format Which format to use
+     * @param string $format Which format to use
      * @return $string
      */
     public function html(string $format = 'plain'): Markup
@@ -194,7 +195,7 @@ class Address extends Model
             $html = Craft::$app->view->renderTemplate(
                 "vzaddress/_frontend/$format",
                 [
-                'address' => $this,
+                    'address' => $this,
                 ]
             );
             Craft::$app->view->setTemplateMode($oldMode);
@@ -207,40 +208,46 @@ class Address extends Model
     /**
      * Returns the URL for a static image from various mapping services
      *
-     * @param  string $source Which mapping service to use
-     * @param  array  $params Option to pass through to the source
+     * @param string $source Which mapping service to use
+     * @param array $params Option to pass through to the source
      * @return $string
      */
     public function mapUrl(string $source = 'google', array $params = []): string
     {
         // Create the url-encoded address
-        $query = urlencode(implode(', ', $this->toArray()));
-
-        // Any additional URL parameters to include
-        $params = count($params) ? '&' . http_build_query($params) : '';
+        $addressArray = $this->toArray();
+        unset($addressArray['name']);
+        $query = implode(', ', $addressArray);
 
         if ($source == 'osm') {
-            $url = "http://www.openstreetmap.org/search?query={$query}?{$params}";
+            $params['query'] = $query;
+            $baseUrl = 'https://www.openstreetmap.org/search';
         } elseif ($source == 'here') {
-            $url = "https://wego.here.com/search/{$query}?{$params}";
+            $baseUrl = 'https://wego.here.com/search/' . $query;
         } elseif ($source == 'bing') {
-            $url = "https://www.bing.com/maps?q={$query}{$params}";
+            $params['q'] = $query;
+            $params['key'] = $params['key'] ?? $this->_settings->bingApiKey ?? null;
+            $baseUrl = 'https://www.bing.com/maps';
         } elseif ($source == 'mapquest') {
-            $url = "https://www.mapquest.com/search/results?query={$query}{$params}";
+            $params['query'] = $query;
+            $params['key'] = $params['key'] ?? $this->_settings->mapquestApiKey ?? null;
+            $baseUrl = 'https://www.mapquest.com/search/results';
+        } elseif ($source == 'apple') {
+            $params['address'] = $query;
+            $baseUrl = 'https://maps.apple.com/';
         } else {
-            if (empty($params['key']) && !empty($this->_settings->googleApiKey)) {
-                $params['key'] = $this->_settings->googleApiKey;
-            }
-            $url = "https://www.google.com/maps?q={$query}{$params}";
+            $params['q'] = $query;
+            $params['key'] = $params['key'] ?? $this->_settings->googleApiKey ?? null;
+            $baseUrl = 'https://www.google.com/maps';
         }
 
-        return $url;
+        return UrlHelper::urlWithParams($baseUrl, $params);
     }
 
     /**
      * Returns the URL for a static map image from one of several sources
      *
-     * @param  array $params Parameters to control the map size & style
+     * @param array $params Parameters to control the map size & style
      * @return string
      */
     public function staticMapUrl(array $params = []): string
@@ -255,18 +262,11 @@ class Address extends Model
 
         if ($source == 'here') {
             // Get the API key, either from the template params or the plugin config
-            if (empty($params['appId']) && !empty($this->_settings->hereAppId)) {
-                $params['appId'] = $this->_settings->hereAppId;
-            }
-            if (empty($params['appCode']) && !empty($this->_settings->hereAppCode)) {
-                $params['appCode'] = $this->_settings->hereAppCode;
-            }
+            $params['app_id'] = $params['app_id'] ?? $this->_settings->hereAppId ?? null;
+            $params['app_code'] = $params['app_code'] ?? $this->_settings->hereAppCode ?? null;
 
-            $appId = !empty($params['appId']) ? strtolower($params['appId']) : false;
-            $appCode = !empty($params['appCode']) ? strtolower($params['appCode']) : false;
-
-            if (!$appId || !$appCode) {
-                throw new UserException('You must specify an App ID and App Code to use HERE WeGo maps.');
+            if (!$params['app_id'] || !$params['app_code']) {
+                throw new UserException('You must specify an App ID and API Key to use HERE WeGo maps.');
             }
 
             // Rename width & height parameters
@@ -275,14 +275,16 @@ class Address extends Model
             $params['z'] = $params['zoom'];
             unset($params['width'], $params['height'], $params['zoom']);
 
-            // Get the coordinates
-            $coords = $this->getCoords();
-            $params['c'] = implode(',', $coords);
+            // Get the address pieces
+            preg_match('/^(\\d+)\\s(.*)/u', $this->street, $streetMatches);
+            $params['n'] = $streetMatches[1];
+            $params['s'] = $streetMatches[2];
+            $params['ci'] = $this->city;
+            $params['co'] = $this->country;
+            $params['zi'] = $this->postalCode;
 
-            // Add all the parameters to a query string
-            $query = http_build_query($params);
-
-            return "https://image.maps.cit.api.here.com/mia/1.6/mapview?{$query}";
+            // Generate the URL
+            return UrlHelper::urlWithParams('https://image.maps.api.here.com/mia/1.6/mapview', $params);
         } elseif ($source == 'bing') {
             // Get the API key, either from the template params or the plugin config
             if (empty($params['key']) && !empty($this->_settings->bingApiKey)) {
@@ -327,9 +329,7 @@ class Address extends Model
             return "https://www.mapquestapi.com/staticmap/v5/map?{$query}";
         } else {
             // Get the API key, either from the template params or the plugin config
-            if (empty($params['key']) && !empty($this->_settings->googleApiKey)) {
-                $params['key'] = $this->_settings->googleApiKey;
-            }
+            $params['key'] = $params['key'] ?? $this->_settings->googleApiKey ?? null;
 
             if (!$params['key']) {
                 throw new UserException('You must specify an API Key to use Google Maps.');
@@ -339,11 +339,15 @@ class Address extends Model
             $params['size'] = $params['width'] . 'x' . $params['height'];
             unset($params['width'], $params['height']);
 
+            // Set type
+            $params['maptype'] = $params['type'] ?? null;
+            unset($params['type']);
+
             // Marker options
             $params['markers'] = '';
             $params['markers'] .= !empty($params['markerSize']) ? 'size:' . strtolower($params['markerSize']) . '|' : false;
-            $params['markers'] .= !empty($params['markerLabel']) ? 'color:' . strtoupper($params['markerLabel']) . '|' : false;
-            $params['markers'] .= !empty($params['markerColor']) ? 'label:' . strtolower(str_replace('#', '0x', $params['markerColor'])) . '|' : false;
+            $params['markers'] .= !empty($params['markerLabel']) ? 'label:' . strtoupper($params['markerLabel']) . '|' : false;
+            $params['markers'] .= !empty($params['markerColor']) ? 'color:' . strtolower(str_replace('#', '0x', $params['markerColor'])) . '|' : false;
             $params['markers'] .= urlencode(implode(', ', $this->toArray()));
             unset($params['markerSize'], $params['markerLabel'], $params['markerColor']);
 
@@ -354,20 +358,19 @@ class Address extends Model
 
             // Add all the other parameters to a query string
             $params['sensor'] = 'false';
-            $query = http_build_query($params);
 
             // Generate the URL
-            return "https://maps.googleapis.com/maps/api/staticmap?{$query}";
+            return UrlHelper::urlWithParams('https://maps.googleapis.com/maps/api/staticmap', $params);
         }
     }
 
     /**
      * Returns an HTML image tag for a static map image from one of several sources
      *
-     * @param  array $params Parameters to control the map size & style
-     * @return string
+     * @param array $params Parameters to control the map size & style
+     * @return Markup
      */
-    public function staticMap(array $params = []): Twig_Markup
+    public function staticMap(array $params = []): Markup
     {
         $width = !empty($params['width']) ? (int)$params['width'] : 400;
         $height = !empty($params['height']) ? (int)$params['height'] : 200;
@@ -400,13 +403,13 @@ class Address extends Model
             throw new UserException('You must specify an API Key to use Google Maps.');
         }
 
-        $width  = isset($params['width']) ? strtolower($params['width']) : '400';
+        $width = isset($params['width']) ? strtolower($params['width']) : '400';
         $height = isset($params['height']) ? strtolower($params['height']) : '200';
         unset($params['width'], $params['height']);
 
         // these mirror MapOptions object - https://developers.google.com/maps/documentation/javascript/3.exp/reference#MapOptions
         $defaultParams = [
-            'zoom'   => 14,
+            'zoom' => 14,
             'center' => $this->_getCoords(),
         ];
         $params = array_merge($defaultParams, $params);
@@ -414,7 +417,7 @@ class Address extends Model
         // Configuration for the generated map
         $config = [
             'id' => uniqid('map-', true),
-            'width'  => $width,
+            'width' => $width,
             'height' => $height,
         ];
 
@@ -425,9 +428,9 @@ class Address extends Model
             'vzaddress/_frontend/googlemap_dynamic',
             [
                 'options' => $params,
-            'config'  => $config,
-            'icon'    => $icon,
-            'key'     => $params['key'],
+                'config' => $config,
+                'icon' => $icon,
+                'key' => $params['key'],
             ]
         );
         Craft::$app->view->setTemplateMode($oldMode);

@@ -48,7 +48,7 @@ You can also output the html in one of three structured data formats: Schema.org
 
     {{ entry.fieldName.mapUrl('google', { zoom: 5 }) }}
 
-The first parameter is the service to use, one of `google`, `osm` (OpenStreetMap), `here`, `bing`, or `mapquest`. The second parameter is an array of paramters to be passed through in the map URL. Please see the documentation for the particular mapping provider you are using for the available options.
+The first parameter is the service to use, one of `google`, `osm` (OpenStreetMap), `here`, `bing`, `mapquest`, or `apple`. The second parameter is an array of paramters to be passed through in the map URL. Please see the documentation for the particular mapping provider you are using for the available options.
 
 ### Output the URL of a static map image from Google Maps
 
@@ -79,7 +79,7 @@ The available parameters include:
 * `markerSize` - The relative size of the pushpin that marks the address location. One of: normal, mid, small, or tiny. (default: normal)
 * `markerColor` - The color of the pushpin. Either a named color (black, brown, green, purple, yellow, blue, gray, orange, red, or white) or a 6-digit hex-code, like "#ff0000". Three-digit color codes are not supported. (default: red)
 * `markerLabel` - Instead of the normal dot, you can specify a single letter or number to appear on the pushpin. (default: none)
-* `key` - Your [Google API key](https://developers.google.com/maps/documentation/static-maps/get-api-key). Not required, but you may be subject to usage limits if you don't have an API key. You can also specify your API key globally in the plugin settings page. (default: none)
+* `key` - Your [Google API key](https://developers.google.com/maps/documentation/static-maps/get-api-key). You can also specify your API key globally in the plugin settings page. (required)
 * `style` - A [multidimensional array](https://developers.google.com/maps/documentation/javascript/styling) defining the styling you wish to be applied to the map 
 
 ### Output an image tag containing the static Google Map
