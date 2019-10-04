@@ -33,11 +33,39 @@ class Settings extends Model
     // =========================================================================
 
     /**
-     * Some field model attribute
-     *
      * @var string
      */
     public $googleApiKey = '';
+
+    /**
+     * @var string
+     */
+    public $hereAppId = '';
+
+    /**
+     * @var string
+     */
+    public $hereAppCode = '';
+
+    /**
+     * @var string
+     */
+    public $hereJsAppId = '';
+
+    /**
+     * @var string
+     */
+    public $hereJsApiKey = '';
+
+    /**
+     * @var string
+     */
+    public $bingApiKey = '';
+
+    /**
+     * @var string
+     */
+    public $mapquestApiKey = '';
 
     // Public Methods
     // =========================================================================

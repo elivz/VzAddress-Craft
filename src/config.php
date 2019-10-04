@@ -30,7 +30,7 @@ return [
 
     // HERE maps app id
     'hereAppId' => '',
-    'hereAppCode' => '',
+    'hereApiKey' => '',
 
     // API key for Bing maps
     'bingApiKey' => '',

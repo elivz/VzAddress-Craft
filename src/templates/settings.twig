@@ -22,3 +22,49 @@
     name: 'googleApiKey',
     value: settings['googleApiKey']})
 }}
+
+<hr>
+
+{{ forms.textField({
+    label: 'HERE JavaScript App ID'|t('vzaddress'),
+    instructions: 'A JavaScript App ID and API key are required to embed maps from HERE. You will need to <a href="$$$" target="_blank">register your app with HERE</a> and paste the provided credentials here before the HERE dynamic map template tags will work.'|t('vzaddress')|replace('$$$', 'https://developer.here.com'),
+    id: 'hereJsAppId',
+    name: 'hereJsAppId',
+    value: settings['hereJsAppId']}) }}
+
+{{ forms.textField({
+    label: 'HERE JavaScript API Key'|t('vzaddress'),
+    id: 'hereJsApiKey',
+    name: 'hereJsApiKey',
+    value: settings['hereJsApiKey']}) }}
+
+{{ forms.textField({
+    label: 'HERE REST App ID'|t('vzaddress'),
+    instructions: 'A REST App ID and App Code are required to embed static maps from HERE. You will need to <a href="$$$" target="_blank">register your app with HERE</a> and paste the provided credentials here before the HERE static map template tags will work.'|t('vzaddress')|replace('$$$', 'https://developer.here.com'),
+    id: 'hereAppId',
+    name: 'hereAppId',
+    value: settings['hereAppId']}) }}
+
+{{ forms.textField({
+    label: 'HERE REST API Key'|t('vzaddress'),
+    id: 'hereAppCode',
+    name: 'hereAppCode',
+    value: settings['hereAppCode']}) }}
+
+<hr>
+
+{{ forms.textField({
+    label: 'Bing API Key'|t('vzaddress'),
+    instructions: 'An API key is required to embed maps from Bing. You will need to <a href="$$$" target="_blank">register your app with Bing</a> and paste the provided key here before any of the Bing template tags will work.'|t('vzaddress')|replace('$$$', 'https://www.bingmapsportal.com/'),
+    id: 'bingApiKey',
+    name: 'bingApiKey',
+    value: settings['bingApiKey']}) }}
+
+<hr>
+
+{{ forms.textField({
+    label: 'MapQuest API Key'|t('vzaddress'),
+    instructions: 'An API key is required to embed maps from MapQuest. You will need to <a href="$$$" target="_blank">register your app with MapQuest</a> and paste the provided Consumer Key here before any of the MapQuest template tags will work.'|t('vzaddress')|replace('$$$', 'https://developer.mapquest.com/'),
+    id: 'mapquestApiKey',
+    name: 'mapquestApiKey',
+    value: settings['mapquestApiKey']}) }}
