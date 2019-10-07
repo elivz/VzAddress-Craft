@@ -15,9 +15,11 @@ use Craft;
 use craft\base\Model;
 use craft\base\Plugin;
 use craft\events\RegisterComponentTypesEvent;
+use craft\feedme\events\RegisterFeedMeFieldsEvent;
 use craft\services\Fields;
 use craft\web\twig\variables\CraftVariable;
 use elivz\vzaddress\fields\Address;
+use elivz\vzaddress\fields\VzAddressFeedMe as VzAddressFieldFeedMe;
 use elivz\vzaddress\models\Settings;
 use elivz\vzaddress\services\VzAddressService;
 use elivz\vzaddress\variables\VzAddressVariable;
@@ -97,6 +99,13 @@ class VzAddress extends Plugin
                 $variable->set('vzAddress', VzAddressVariable::class);
             }
         );
+
+        // Register support for Feed Me if it is installed
+        if (Craft::$app->getPlugins()->isPluginEnabled('feed-me')) {
+            Event::on(\craft\feedme\services\Fields::class, \craft\feedme\services\Fields::EVENT_REGISTER_FEED_ME_FIELDS, function(RegisterFeedMeFieldsEvent $e) {
+                $e->fields[] = VzAddressFieldFeedMe::class;
+            });
+        }
     }
 
     // Protected Methods

@@ -105,6 +105,7 @@ class Address extends Field
         if (is_string($value) && !empty($value)) {
             $value = Json::decode($value);
         }
+
         $model = new AddressModel($value);
         return $model;
     }
