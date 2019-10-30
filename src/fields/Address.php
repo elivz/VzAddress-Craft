@@ -106,6 +106,11 @@ class Address extends Field
             $value = Json::decode($value);
         }
 
+        // For backwards compatibility with VZ Address 1.x
+        if (isset($value['__model__'])) {
+            unset($value['__model__']);
+        }
+
         $model = new AddressModel($value);
         return $model;
     }
