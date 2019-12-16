@@ -1,14 +1,16 @@
 <div id="{{ config.id }}" class="google-map" style="width:{{ config.width }}px; height:{{ config.height }}px;"></div>
 
+{% do view.registerJsFile("https://maps.googleapis.com/maps/api/js?key=#{key}&language=#{options.language ?? 'en'}") %}
+
 {% js at endBody %}
     document.addEventListener('DOMContentLoaded', function() {
-        var map = new google.maps.Map(
-            document.getElementById('{{ config.id }}'),
-            {{ options|json_encode|raw }}
-        );
+    var map = new google.maps.Map(
+    document.getElementById('{{ config.id }}'),
+    {{ options|json_encode|raw }}
+    );
 
-        {% if icon.url is defined %}
-            var icon = {
+    {% if icon.url is defined %}
+        var icon = {
                 url: '{{ icon.url }}',
                 {% if icon.width is defined and icon.height is defined %}scaledSize: new google.maps.Size({{icon.width}}, {{icon.height}}),{% endif %}
                 {% if icon.origin.x is defined and icon.origin.y is defined %}origin: new google.maps.Point({{icon.origin.x}},{{icon.origin.y}}),{% endif %}
@@ -23,9 +25,3 @@
         });
     });
 {% endjs %}
-
-{% do view.registerJsFile("https://maps.googleapis.com/maps/api/js?key=#{key}", {
-    'position': 'POS_END',
-    'defer': 'defer',
-    'async': 'async',
-}) %}

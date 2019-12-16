@@ -2,7 +2,7 @@
   "name": "elivz/vzaddress",
   "description": "A simple address field for Craft.",
   "type": "craft-plugin",
-  "version": "2.0.0-beta.2",
+  "version": "2.0.0-beta.3",
   "keywords": [
     "craft",
     "cms",

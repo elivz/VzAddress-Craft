@@ -62,22 +62,28 @@ class VzAddressService extends Component
     /**
      * Method to geocode the given address string into a lat/lng coordinate pair
      *
-     * @var string $address The address string
      * @return array The lat/lng pair in an array
+     * @var string $address The address string
      */
     public function geocodeAddress(Address $address): array
     {
-        if (empty($this->_settings->key)) {
+        // Get the API key, either from the template params or the plugin config
+        $key = trim($this->_settings->googleApiKey ?? null);
+
+        if (empty($key)) {
             throw new UserException('You must specify a Google Maps API Key in the VZ Address plugin settings before you can geocode an address.');
         }
 
         $coords = [];
 
-        $addressString = urlencode((string)$address);
-        $url = "https://maps.google.com/maps/api/geocode/json?address={$address}&key={$this->_settings->key}";
+        $url = 'https://maps.googleapis.com/maps/api/geocode/json';
+        $params = http_build_query([
+            'key' => $key,
+            'address' => (string)$address
+        ]);
 
         // get the json response
-        $response = json_decode(file_get_contents($url), true);
+        $response = json_decode(file_get_contents($url . '?' . $params), true);
 
         // Response status will be 'OK' if able to geocode given address
         if ($response['status'] == 'OK') {

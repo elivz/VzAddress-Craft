@@ -100,13 +100,13 @@ class Address extends Model
     public function getCountryName()
     {
         $countries = VzAddress::getInstance()->address->countries;
-        return $countries[$this->country];
+        return $countries[$this->country] ?? '';
     }
 
     public function getCoords()
     {
         if (empty($this->latitude) || empty($this->longitude)) {
-            $coords = Address::geocodeAddress($this);
+            $coords = VzAddress::getInstance()->address->geocodeAddress($this);
             $this->latitude = $coords['latitude'];
             $this->longitude = $coords['longitude'];
         }
@@ -329,7 +329,7 @@ class Address extends Model
             return "https://www.mapquestapi.com/staticmap/v5/map?{$query}";
         } else {
             // Get the API key, either from the template params or the plugin config
-            $params['key'] = $params['key'] ?? $this->_settings->googleApiKey ?? null;
+            $params['key'] = trim($params['key'] ?? $this->_settings->googleApiKey ?? null);
 
             if (!$params['key']) {
                 throw new UserException('You must specify an API Key to use Google Maps.');
@@ -392,12 +392,10 @@ class Address extends Model
      *
      * @var array $params An array of MapOptions for the Google Map object
      */
-    public function dynamicMap($params = [], $icon = []): Twig_Markup
+    public function dynamicMap($params = [], $icon = []): Markup
     {
         // Get the API key, either from the template params or the plugin config
-        if (empty($params['key']) && !empty($this->_settings->googleApiKey)) {
-            $params['key'] = $this->_settings->googleApiKey;
-        }
+        $params['key'] = trim($params['key'] ?? $this->_settings->googleApiKey ?? null);
 
         if (!$params['key']) {
             throw new UserException('You must specify an API Key to use Google Maps.');
@@ -408,9 +406,13 @@ class Address extends Model
         unset($params['width'], $params['height']);
 
         // these mirror MapOptions object - https://developers.google.com/maps/documentation/javascript/3.exp/reference#MapOptions
+        $coords = $this->getCoords();
         $defaultParams = [
             'zoom' => 14,
-            'center' => $this->_getCoords(),
+            'center' => [
+                'lat' => $coords['latitude'],
+                'lng' => $coords['longitude'],
+            ],
         ];
         $params = array_merge($defaultParams, $params);
 
@@ -425,7 +427,7 @@ class Address extends Model
         $oldMode = Craft::$app->view->getTemplateMode();
         Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
         $html = Craft::$app->view->renderTemplate(
-            'vzaddress/_frontend/googlemap_dynamic',
+            'vzaddress/_frontend/googlemapDynamic',
             [
                 'options' => $params,
                 'config' => $config,
@@ -435,21 +437,12 @@ class Address extends Model
         );
         Craft::$app->view->setTemplateMode($oldMode);
 
-        return TemplateHelper::getRaw($html);
+        return Template::raw($html);
     }
 
 
     // Private Methods
     // =========================================================================
-
-    /**
-     * Geocode the address and return the latitude and longitude
-     *
-     * @return array
-     */
-    private function _getCoords()
-    {
-    }
 
     /**
      * Parse the given style array and return a formatted string
