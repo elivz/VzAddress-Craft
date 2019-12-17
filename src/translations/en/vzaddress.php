@@ -34,6 +34,8 @@ return [
     'Country' => 'Country',
     'Google API Key' => 'Google API Key',
     'An API key is required for any new implementation of Google Maps. You will need to <a href="$$$" target="_blank">register your app with Google</a> and paste the provided key here before any of the Google template tags will work.' => 'An API key is required for any new implementation of Google Maps. You will need to <a href="$$$" target="_blank">register your app with Google</a> and paste the provided key here before any of the Google template tags will work.',
+    'Google Server-Side API Key' => 'Google Server-Side API Key',
+    'Only required if your main API key is restricted to HTTP referrers. An API key that allows server-side use is required for geocoding.' => 'Only required if your main API key is restricted to HTTP referrers. An API key that allows server-side use is required for geocoding.',
     'HERE JavaScript App ID' => 'HERE JavaScript App ID',
     'A JavaScript App ID and API key are required to embed maps from HERE. You will need to <a href="$$$" target="_blank">register your app with HERE</a> and paste the provided credentials here before the HERE dynamic map template tags will work.' => 'A JavaScript App ID and API key are required to embed maps from HERE. You will need to <a href="$$$" target="_blank">register your app with HERE</a> and paste the provided credentials here before the HERE dynamic map template tags will work.',
     'HERE JavaScript API Key' => 'HERE JavaScript API Key',

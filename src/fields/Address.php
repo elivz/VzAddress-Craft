@@ -93,6 +93,20 @@ class Address extends Field
     }
 
     /**
+     * @inheritdoc
+     */
+    public function serializeValue($value, ElementInterface $element = null)
+    {
+        $coords = VzAddress::getInstance()->address->geocodeAddress($value);
+        $value->latitude = $coords['latitude'];
+        $value->longitude = $coords['longitude'];
+
+        $value = parent::serializeValue($value, $element);
+
+        return $value;
+    }
+
+    /**
      * Normalizes the field’s value for use.
      *
      * @param mixed $value The raw field value

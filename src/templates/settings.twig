@@ -20,8 +20,14 @@
     instructions: 'An API key is required for any new implementation of Google Maps. You will need to <a href="$$$" target="_blank">register your app with Google</a> and paste the provided key here before any of the Google template tags will work.'|t('vzaddress')|replace('$$$', 'https://developers.google.com/maps/documentation/javascript/get-api-key#key'),
     id: 'googleApiKey',
     name: 'googleApiKey',
-    value: settings['googleApiKey']})
-}}
+    value: settings['googleApiKey']}) }}
+
+{{ forms.textField({
+    label: 'Google Server-Side API Key'|t('vzaddress'),
+    instructions: 'An API key is required for any new implementation of Google Maps. You will need to <a href="$$$" target="_blank">register your app with Google</a> and paste the provided key here before any of the Google template tags will work.'|t('vzaddress')|replace('$$$', 'https://developers.google.com/maps/documentation/javascript/get-api-key#key'),
+    id: 'googleServerApiKey',
+    name: 'googleServerApiKey',
+    value: settings['googleServerApiKey']}) }}
 
 <hr>
 

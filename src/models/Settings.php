@@ -40,6 +40,11 @@ class Settings extends Model
     /**
      * @var string
      */
+    public $googleServerApiKey = '';
+
+    /**
+     * @var string
+     */
     public $hereAppId = '';
 
     /**
@@ -84,6 +89,12 @@ class Settings extends Model
     {
         return [
             ['googleApiKey', 'string'],
+            ['googleServerApiKey', 'string'],
+            ['hereAppCode', 'string'],
+            ['hereJsAppId', 'string'],
+            ['hereJsApiKey', 'string'],
+            ['bingApiKey', 'string'],
+            ['mapquestApiKey', 'string'],
         ];
     }
 }

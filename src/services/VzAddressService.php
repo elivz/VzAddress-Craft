@@ -67,14 +67,17 @@ class VzAddressService extends Component
      */
     public function geocodeAddress(Address $address): array
     {
+        $coords = [
+            'latitude' => null,
+            'longitude' => null,
+        ];
+
         // Get the API key, either from the template params or the plugin config
-        $key = trim($this->_settings->googleApiKey ?? null);
+        $key = trim($this->_settings->googleServerApiKey ?? $this->_settings->googleApiKey ?? null);
 
         if (empty($key)) {
-            throw new UserException('You must specify a Google Maps API Key in the VZ Address plugin settings before you can geocode an address.');
+            return $coords;
         }
-
-        $coords = [];
 
         $url = 'https://maps.googleapis.com/maps/api/geocode/json';
         $params = http_build_query([
@@ -97,6 +100,8 @@ class VzAddressService extends Component
                     'longitude' => $lng,
                 ];
             }
+        } elseif (isset($response['error_message'])) {
+            throw new UserException('Error while geocoding address: ' . $response['error_message']);
         }
 
         return $coords;

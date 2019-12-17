@@ -1,0 +1,23 @@
+[
+  {
+    "title": "Imported One",
+    "address": {
+      "Street": "123 Main",
+      "City": "Anywhere",
+      "State": "MT",
+      "Zip": "12345",
+      "Country": "US"
+    }
+  },
+  {
+    "title": "Imported Two",
+    "address": {
+      "Name": "Eli",
+      "Street": "456 Main Rd.",
+      "City": "Another Place",
+      "State": "CT",
+      "Zip": "55555",
+      "Country": "United States"
+    }
+  }
+]
