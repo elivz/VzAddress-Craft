@@ -178,6 +178,7 @@ class Address extends Model
             return $html;
         }
 
+        unset($addressArray['latitude'], $addressArray['longitude']);
         return implode(', ', $this->toArray());
     }
 
@@ -206,7 +207,7 @@ class Address extends Model
     }
 
     /**
-     * Returns the URL for a static image from various mapping services
+     * Returns the direct URL to the address on various mapping services
      *
      * @param string $source Which mapping service to use
      * @param array $params Option to pass through to the source
@@ -216,7 +217,7 @@ class Address extends Model
     {
         // Create the url-encoded address
         $addressArray = $this->toArray();
-        unset($addressArray['name']);
+        unset($addressArray['name'], $addressArray['latitude'], $addressArray['longitude']);
         $query = implode(', ', $addressArray);
 
         if ($source == 'osm') {
@@ -226,18 +227,15 @@ class Address extends Model
             $baseUrl = 'https://wego.here.com/search/' . $query;
         } elseif ($source == 'bing') {
             $params['q'] = $query;
-            $params['key'] = $params['key'] ?? $this->_settings->bingApiKey ?? null;
             $baseUrl = 'https://www.bing.com/maps';
         } elseif ($source == 'mapquest') {
             $params['query'] = $query;
-            $params['key'] = $params['key'] ?? $this->_settings->mapquestApiKey ?? null;
             $baseUrl = 'https://www.mapquest.com/search/results';
         } elseif ($source == 'apple') {
             $params['address'] = $query;
             $baseUrl = 'https://maps.apple.com/';
         } else {
             $params['q'] = $query;
-            $params['key'] = $params['key'] ?? $this->_settings->googleApiKey ?? null;
             $baseUrl = 'https://www.google.com/maps';
         }
 
