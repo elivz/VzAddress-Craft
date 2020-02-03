@@ -178,8 +178,9 @@ class Address extends Model
             return $html;
         }
 
+        $addressArray = $this->toArray();
         unset($addressArray['latitude'], $addressArray['longitude']);
-        return implode(', ', $this->toArray());
+        return implode(', ', $addressArray);
     }
 
     /**
