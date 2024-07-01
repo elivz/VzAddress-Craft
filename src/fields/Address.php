@@ -60,7 +60,7 @@ class Address extends Field
     // Public Methods
     // =========================================================================
 
-    function init()
+    function init(): void
     {
         parent::init();
 
@@ -77,7 +77,7 @@ class Address extends Field
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         $rules = parent::rules();
         // $rules = array_merge($rules, []);
@@ -95,7 +95,7 @@ class Address extends Field
     /**
      * @inheritdoc
      */
-    public function serializeValue($value, ElementInterface $element = null)
+    public function serializeValue(mixed $value, ?ElementInterface $element = null): mixed
     {
         $coords = VzAddress::getInstance()->address->geocodeAddress($value);
         $value->latitude = $coords['latitude'];
@@ -114,10 +114,12 @@ class Address extends Field
      *
      * @return mixed The prepared field value
      */
-    public function normalizeValue($value, ElementInterface $element = null)
+    public function normalizeValue(mixed $value, ElementInterface $element = null): mixed
     {
         if (is_string($value) && !empty($value)) {
             $value = Json::decode($value);
+        } else if(empty($value)) {
+            return new AddressModel();
         }
 
         // For backwards compatibility with VZ Address 1.x
@@ -125,8 +127,9 @@ class Address extends Field
             unset($value['__model__']);
         }
 
-        $model = new AddressModel($value);
-        return $model;
+        // If the value is an array, we can use that to create a new Address model, otherwise try to convert the model to an array
+        $value = is_array($value) ? $value : ($value->toArray() ?? []);
+        return new AddressModel($value);
     }
 
     /**
@@ -134,7 +137,7 @@ class Address extends Field
      *
      * @return string|null
      */
-    public function getSettingsHtml()
+    public function getSettingsHtml(): ?string
     {
         $countries = VzAddress::getInstance()->address->countries;
 
@@ -157,7 +160,7 @@ class Address extends Field
      *
      * @return string The input HTML.
      */
-    public function getInputHtml($value, ElementInterface $element = null): string
+    public function getInputHtml($value, ?ElementInterface $element = null): string
     {
         // Register our asset bundle
         Craft::$app->getView()->registerAssetBundle(FieldAsset::class);
