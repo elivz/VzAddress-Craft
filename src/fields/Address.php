@@ -114,7 +114,7 @@ class Address extends Field
      *
      * @return mixed The prepared field value
      */
-    public function normalizeValue(mixed $value, ElementInterface $element = null): mixed
+    public function normalizeValue(mixed $value, ?\craft\base\ElementInterface $element = null): mixed
     {
         if (is_string($value) && !empty($value)) {
             $value = Json::decode($value);
@@ -160,7 +160,7 @@ class Address extends Field
      *
      * @return string The input HTML.
      */
-    public function getInputHtml($value, ?ElementInterface $element = null): string
+    public function getInputHtml(mixed $value, ?ElementInterface $element = null): string
     {
         // Register our asset bundle
         Craft::$app->getView()->registerAssetBundle(FieldAsset::class);
