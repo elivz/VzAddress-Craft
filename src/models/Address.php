@@ -471,11 +471,11 @@ class Address extends Model
                     if ($key == 'color') {
                         $value = str_replace('#', '0x', $value);
                     }
-                    $declaration[] .= "{$key}:{$value}";
+                    $declaration[] = "{$key}:{$value}";
                 }
             }
 
-            $output .= '&style=' . implode($declaration, '|');
+            $output .= '&style=' . implode('|', $declaration);
         }
 
         return $output;
